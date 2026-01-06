@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const isDark = ref(true)
 
@@ -12,6 +12,46 @@ const toggleTheme = () => {
     document.documentElement.classList.remove('dark')
     localStorage.theme = 'light'
   }
+}
+
+// Interactive Animations
+const mouseX = ref(0)
+const mouseY = ref(0)
+
+const handleMouseMove = (event) => {
+  mouseX.value = (event.clientX / window.innerWidth) - 0.5
+  mouseY.value = (event.clientY / window.innerHeight) - 0.5
+}
+
+const typingText = ref('')
+const roles = ['Flutter Developer.', 'Mobile Architect.', 'UI/UX Enthusiast.']
+let roleIndex = 0
+let charIndex = 0
+let isDeleting = false
+
+const typeEffect = () => {
+  const currentRole = roles[roleIndex]
+  
+  if (isDeleting) {
+    typingText.value = currentRole.substring(0, charIndex - 1)
+    charIndex--
+  } else {
+    typingText.value = currentRole.substring(0, charIndex + 1)
+    charIndex++
+  }
+
+  let typeSpeed = isDeleting ? 50 : 100
+
+  if (!isDeleting && charIndex === currentRole.length) {
+    isDeleting = true
+    typeSpeed = 2000
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false
+    roleIndex = (roleIndex + 1) % roles.length
+    typeSpeed = 500
+  }
+
+  setTimeout(typeEffect, typeSpeed)
 }
 
 const name = "Stibin Augustine"
@@ -118,6 +158,14 @@ onMounted(() => {
   document.querySelectorAll('.reveal').forEach((el) => {
     observer.observe(el)
   })
+
+  // Start animations
+  typeEffect()
+  window.addEventListener('mousemove', handleMouseMove)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', handleMouseMove)
 })
 
 const scrollToSection = (id) => {
@@ -135,18 +183,33 @@ const scrollToSection = (id) => {
     <!-- Navigation -->
     <header class="fixed top-0 left-0 right-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md transition-colors duration-300">
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <div class="flex items-center gap-3">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div class="flex items-center gap-3 group cursor-pointer" @click="scrollToSection('home')">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-all duration-300 group-hover:rotate-12 group-hover:scale-110 group-hover:bg-primary group-hover:text-white shadow-sm group-hover:shadow-primary/50">
             <span class="material-symbols-outlined text-2xl">terminal</span>
           </div>
-          <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">{{ name }}</span>
+          <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white transition-all duration-300 group-hover:tracking-wider group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-purple-500">{{ name }}</span>
         </div>
         <nav class="hidden md:flex items-center gap-8">
-          <a @click.prevent="scrollToSection('home')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#home">Home</a>
-          <a @click.prevent="scrollToSection('experience')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#experience">Experience</a>
-          <a @click.prevent="scrollToSection('projects')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#projects">Projects</a>
-          <a @click.prevent="scrollToSection('about')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#about">About Me</a>
-          <a @click.prevent="scrollToSection('contact')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#contact">Contact</a>
+          <a @click.prevent="scrollToSection('home')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#home">
+            Home
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a @click.prevent="scrollToSection('experience')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#experience">
+            Experience
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a @click.prevent="scrollToSection('projects')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#projects">
+            Projects
+             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a @click.prevent="scrollToSection('about')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#about">
+            About Me
+             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a @click.prevent="scrollToSection('contact')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#contact">
+            Contact
+             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
         </nav>
         <div class="hidden md:flex items-center gap-4">
              <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
@@ -168,11 +231,11 @@ const scrollToSection = (id) => {
       </div>
 
       <div v-show="isMenuOpen" class="md:hidden absolute top-16 left-0 w-full bg-white dark:bg-background-dark border-b border-slate-200 dark:border-white/5 p-4 flex flex-col gap-4 shadow-xl z-40 transition-colors duration-300">
-        <a @click.prevent="scrollToSection('home')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#home">Home</a>
-        <a @click.prevent="scrollToSection('experience')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#experience">Experience</a>
-        <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#projects">Projects</a>
-        <a @click.prevent="scrollToSection('about')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#about">About Me</a>
-        <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#contact">Contact</a>
+        <a @click.prevent="scrollToSection('home')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#home">Home</a>
+        <a @click.prevent="scrollToSection('experience')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#experience">Experience</a>
+        <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#projects">Projects</a>
+        <a @click.prevent="scrollToSection('about')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#about">About Me</a>
+        <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#contact">Contact</a>
          <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
             <span class="material-symbols-outlined text-[18px]">download</span>
             <span class="truncate">Resume</span>
@@ -185,8 +248,8 @@ const scrollToSection = (id) => {
       <!-- Hero Section -->
       <section id="home" class="relative flex flex-col justify-center min-h-[90vh] py-20 pb-0">
         <!-- Background Gradient Effect -->
-        <div class="absolute top-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-primary/20 blur-[120px] pointer-events-none"></div>
-        <div class="absolute bottom-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px] pointer-events-none"></div>
+        <div class="absolute top-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-primary/20 blur-[120px] pointer-events-none transition-transform duration-100 ease-out" :style="{ transform: `translate(${mouseX * -30}px, ${mouseY * -30}px)` }"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px] pointer-events-none transition-transform duration-100 ease-out" :style="{ transform: `translate(${mouseX * 30}px, ${mouseY * 30}px)` }"></div>
         
         <div class="container mx-auto px-6 lg:px-8 relative z-10">
           <div class="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
@@ -201,7 +264,8 @@ const scrollToSection = (id) => {
               </div>
               <h1 class="text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
                 Hi, I'm Stibin. <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-slate-600 dark:to-white/60">Flutter Developer.</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-slate-600 dark:to-white/60 min-h-[1.2em] inline-block">{{ typingText }}</span>
+                <span class="animate-pulse text-primary font-thin">|</span>
               </h1>
               <p class="text-lg text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed">
                 {{ summary }}
@@ -230,7 +294,8 @@ const scrollToSection = (id) => {
             
             <!-- Visual Anchor -->
             <div class="relative lg:h-full flex items-center justify-center lg:justify-end reveal" style="transition-delay: 200ms;">
-              <div class="relative aspect-square w-full max-w-md lg:max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-black border border-slate-200 dark:border-white/10 shadow-2xl group transition-colors duration-300">
+              <div class="relative aspect-square w-full max-w-md lg:max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-black border border-slate-200 dark:border-white/10 shadow-2xl group transition-all duration-100 ease-out"
+                   :style="{ transform: `perspective(1000px) rotateY(${mouseX * 5}deg) rotateX(${mouseY * -5}deg)` }">
                  <!-- Profile Image -->
                  <!-- Replace the 'src' below with your actual photo URL -->
                 <img src="/profile.png"
