@@ -25,6 +25,7 @@ const handleMouseMove = (event) => {
 
 const typingText = ref('')
 const textToType = 'Flutter Developer.'
+const isTyping = ref(true)
 let charIndex = 0
 
 const typeEffect = () => {
@@ -32,6 +33,8 @@ const typeEffect = () => {
     typingText.value = textToType.substring(0, charIndex)
     charIndex++
     setTimeout(typeEffect, 100)
+  } else {
+    isTyping.value = false
   }
 }
 
@@ -47,7 +50,9 @@ const skills = ref([
   'State Management',
   'Clean Architecture',
   'Git',
-  'Agile',
+  'Riverpod',
+  'Bloc',
+  'Provider',
   'UI/UX Implementation'
 ])
 
@@ -77,24 +82,24 @@ const experience = ref([
 
 const projects = ref([
   {
-    title: 'E-Commerce Mobile App',
-    tags: ['Flutter', 'Firebase', 'Stripe'],
-    description: 'A full-featured shopping app with real-time inventory, secure payments, and order tracking.',
+    title: 'Spendly',
+    tags: ['Flutter', 'Dart', 'Firebase','Riverpod'],
+    description: 'Spendly is a smart expense tracker that helps you monitor your daily spending with clear statistics.',
     image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     detailsLink: '#',
     sourceLink: '#'
   },
   {
-    title: 'Social Connect',
-    tags: ['Flutter', 'Dart', 'Socket.io'],
+    title: 'Luckey Spinner',
+    tags: ['Flutter', 'Dart', 'SqfLite','Riverpod'],
     description: 'Real-time chat application with group messaging, media sharing, and push notifications.',
     image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     detailsLink: '#',
     sourceLink: '#'
   },
   {
-    title: 'Task Manager',
-    tags: ['Flutter', 'SQLite', 'Provider'],
+    title: 'Flow Tracker',
+    tags: ['Flutter', 'Dart', 'SqfLite', 'Riverpod'],
     description: 'Productivity tool for tracking daily tasks with offline support and data synchronization.',
     image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     detailsLink: '#',
@@ -104,13 +109,13 @@ const projects = ref([
 ])
 
 const contactDetails = ref({
-  email: 'contact@stibinaugustine.com',
-  phone: '+91 987 654 3210',
-  location: 'Trivandrum, Kerala, India',
+  email: 'stibinaugustine3047@gmail.com',
+  phone: '+91 884 805 3964',
+  location: 'Kannur, Kerala, India',
   social: [
-    { name: 'GitHub', icon: 'code', link: '#', text: 'github.com/stibin' },
-    { name: 'LinkedIn', icon: 'work', link: '#', text: 'linkedin.com/in/stibin' },
-    { name: 'Twitter', icon: 'chat', link: '#', text: '@stibin_dev' }
+    { name: 'GitHub', icon: 'code', link: 'https://github.com/stibinottathai', text: 'github.com/stibin' },
+    { name: 'LinkedIn', icon: 'work', link: 'https://in.linkedin.com/in/stibin-augustine-8075b1197', text: 'linkedin.com/in/stibin' },
+    
   ]
 })
 
@@ -255,7 +260,7 @@ const scrollToSection = (id) => {
                       <h1 class="text-3xl md:text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
                         Hi, I'm Stibin. <br class="hidden lg:block"/>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-slate-600 dark:to-white/60 min-h-[1.2em] inline-block">{{ typingText }}</span>
-                        <span class="animate-pulse text-primary font-thin">|</span>
+                        <span v-show="isTyping" class="animate-pulse text-primary font-thin">|</span>
                       </h1>
                   </div>
               </div>
@@ -442,7 +447,7 @@ const scrollToSection = (id) => {
             <p class="text-slate-600 dark:text-slate-400 text-sm">Crafting exceptional mobile experiences.</p>
           </div>
           <div class="flex items-center gap-6">
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors" href="mailto:contact@stibinaugustine.com">
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors" href="mailto:stibinaugustine3047@gmail.com">
                <span class="flex items-center gap-2">
                    <span class="material-symbols-outlined">mail</span>
                    <span class="text-sm">Contact Me</span>
