@@ -82,6 +82,17 @@ const projects = ref([
   }
 ])
 
+const contactDetails = ref({
+  email: 'contact@stibinaugustine.com',
+  phone: '+91 987 654 3210',
+  location: 'Trivandrum, Kerala, India',
+  social: [
+    { name: 'GitHub', icon: 'code', link: '#', text: 'github.com/stibin' },
+    { name: 'LinkedIn', icon: 'work', link: '#', text: 'linkedin.com/in/stibin' },
+    { name: 'Twitter', icon: 'chat', link: '#', text: '@stibin_dev' }
+  ]
+})
+
 const isMenuOpen = ref(false)
 
 onMounted(() => {
@@ -134,6 +145,7 @@ const scrollToSection = (id) => {
           <a @click.prevent="scrollToSection('home')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#home">Home</a>
           <a @click.prevent="scrollToSection('experience')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#experience">Experience</a>
           <a @click.prevent="scrollToSection('projects')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#projects">Projects</a>
+          <a @click.prevent="scrollToSection('about')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#about">About Me</a>
           <a @click.prevent="scrollToSection('contact')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#contact">Contact</a>
         </nav>
         <div class="hidden md:flex items-center gap-4">
@@ -159,6 +171,7 @@ const scrollToSection = (id) => {
         <a @click.prevent="scrollToSection('home')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#home">Home</a>
         <a @click.prevent="scrollToSection('experience')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#experience">Experience</a>
         <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#projects">Projects</a>
+        <a @click.prevent="scrollToSection('about')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#about">About Me</a>
         <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#contact">Contact</a>
          <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
             <span class="material-symbols-outlined text-[18px]">download</span>
@@ -299,7 +312,70 @@ const scrollToSection = (id) => {
           </article>
         </div>
       </section>
-      
+
+      <!-- About Me / Contact Details Section -->
+      <section id="about" class="w-full xl:max-w-[1280px] mx-auto px-4 md:px-10 py-16">
+        <div class="grid gap-12 lg:grid-cols-2 items-center reveal">
+           <div class="flex flex-col gap-6">
+              <div class="flex flex-col gap-2">
+                 <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white mb-2">About Me</h2>
+                 <div class="h-1 w-20 bg-primary rounded-full"></div>
+              </div>
+              <p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                As a passionate Flutter Developer, I specialize in building high-performance mobile applications. 
+                With a deep understanding of Clean Architecture and State Management, I create scalable and maintainable codebases.
+                I am always eager to learn new technologies and improve my skills.
+              </p>
+              
+              <div class="flex flex-col gap-4 mt-4">
+                 <div class="flex items-center gap-4 group">
+                    <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary border border-slate-200 dark:border-slate-700 transition-colors group-hover:bg-primary group-hover:text-white">
+                       <span class="material-symbols-outlined">call</span>
+                    </div>
+                    <div>
+                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Phone</div>
+                       <a :href="'tel:' + contactDetails.phone" class="text-slate-900 dark:text-white font-medium hover:text-primary transition-colors">{{ contactDetails.phone }}</a>
+                    </div>
+                 </div>
+                 
+                 <div class="flex items-center gap-4 group">
+                    <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary border border-slate-200 dark:border-slate-700 transition-colors group-hover:bg-primary group-hover:text-white">
+                       <span class="material-symbols-outlined">mail</span>
+                    </div>
+                    <div>
+                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Email</div>
+                       <a :href="'mailto:' + contactDetails.email" class="text-slate-900 dark:text-white font-medium hover:text-primary transition-colors">{{ contactDetails.email }}</a>
+                    </div>
+                 </div>
+
+                 <div class="flex items-center gap-4 group">
+                    <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary border border-slate-200 dark:border-slate-700 transition-colors group-hover:bg-primary group-hover:text-white">
+                       <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div>
+                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Location</div>
+                       <p class="text-slate-900 dark:text-white font-medium">{{ contactDetails.location }}</p>
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           <!-- Social Links or Additional Info -->
+           <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-700/50 rounded-2xl p-8 shadow-lg">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Connect with me</h3>
+              <div class="grid gap-4">
+                 <a v-for="social in contactDetails.social" :key="social.name" :href="social.link" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group">
+                    <div class="flex items-center gap-3">
+                       <span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors">{{ social.icon }}</span>
+                       <span class="font-medium text-slate-700 dark:text-slate-200">{{ social.name }}</span>
+                    </div>
+                    <span class="text-sm text-slate-500">{{ social.text }}</span>
+                 </a>
+              </div>
+           </div>
+        </div>
+      </section>
+
       <!-- Footer -->
       <footer id="contact" class="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-background-dark py-10 transition-colors duration-300">
         <div class="max-w-[1280px] mx-auto px-4 md:px-10 flex flex-col md:flex-row items-center justify-between gap-6 reveal">
