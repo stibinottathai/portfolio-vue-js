@@ -246,7 +246,7 @@ const scrollToSection = (id) => {
     <main class="flex flex-1 flex-col relative overflow-hidden mt-16">
       
       <!-- Hero Section -->
-      <section id="home" class="relative flex flex-col justify-center min-h-[90vh] py-20 pb-0">
+      <section id="home" class="relative flex flex-col justify-start lg:justify-center min-h-[90vh] pt-8 lg:py-20 pb-0">
         <!-- Background Gradient Effect -->
         <div class="absolute top-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-primary/20 blur-[120px] pointer-events-none transition-transform duration-100 ease-out" :style="{ transform: `translate(${mouseX * -30}px, ${mouseY * -30}px)` }"></div>
         <div class="absolute bottom-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px] pointer-events-none transition-transform duration-100 ease-out" :style="{ transform: `translate(${mouseX * 30}px, ${mouseY * 30}px)` }"></div>
