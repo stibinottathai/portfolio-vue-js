@@ -1,6 +1,19 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+const isDark = ref(true)
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  if (isDark.value) {
+    document.documentElement.classList.add('dark')
+    localStorage.theme = 'dark'
+  } else {
+    document.documentElement.classList.remove('dark')
+    localStorage.theme = 'light'
+  }
+}
+
 const name = "Stibin Augustine"
 // ... existing code ...
 const summary = "Flutter Developer with strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management."
@@ -72,6 +85,15 @@ const projects = ref([
 const isMenuOpen = ref(false)
 
 onMounted(() => {
+  // Check for saved user preference
+  if (localStorage.theme === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+    isDark.value = false
+    document.documentElement.classList.remove('dark')
+  } else {
+    isDark.value = true
+    document.documentElement.classList.add('dark')
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -100,46 +122,52 @@ const scrollToSection = (id) => {
   <div class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden transition-colors duration-300">
     
     <!-- Navigation -->
-    <header class="sticky top-0 z-50 w-full border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
+    <header class="fixed top-0 left-0 right-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md transition-colors duration-300">
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
         <div class="flex items-center gap-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <span class="material-symbols-outlined text-2xl">terminal</span>
           </div>
-          <span class="text-lg font-bold tracking-tight text-white">{{ name }}</span>
+          <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">{{ name }}</span>
         </div>
         <nav class="hidden md:flex items-center gap-8">
-          <a @click.prevent="scrollToSection('home')" class="text-sm font-medium text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#home">Home</a>
-          <a @click.prevent="scrollToSection('experience')" class="text-sm font-medium text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#experience">Experience</a>
-          <a @click.prevent="scrollToSection('projects')" class="text-sm font-medium text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#projects">Projects</a>
-          <a @click.prevent="scrollToSection('contact')" class="text-sm font-medium text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#contact">Contact</a>
+          <a @click.prevent="scrollToSection('home')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#home">Home</a>
+          <a @click.prevent="scrollToSection('experience')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#experience">Experience</a>
+          <a @click.prevent="scrollToSection('projects')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#projects">Projects</a>
+          <a @click.prevent="scrollToSection('contact')" class="text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer" href="#contact">Contact</a>
         </nav>
-        <div class="hidden md:flex">
-             <button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
+        <div class="hidden md:flex items-center gap-4">
+             <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
+             </button>
+             <button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
                 <span class="material-symbols-outlined text-[18px]">download</span>
                 <span class="truncate">Resume</span>
             </button>
         </div>
-        <div class="flex items-center md:hidden">
-          <button @click="isMenuOpen = !isMenuOpen" class="text-white">
+        <div class="flex items-center md:hidden gap-4">
+          <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+            <span class="material-symbols-outlined text-[20px]">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
+          </button>
+          <button @click="isMenuOpen = !isMenuOpen" class="text-slate-900 dark:text-white">
             <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
           </button>
         </div>
       </div>
 
-      <div v-show="isMenuOpen" class="md:hidden absolute top-16 left-0 w-full bg-background-dark border-b border-white/5 p-4 flex flex-col gap-4 shadow-xl z-40">
-        <a @click.prevent="scrollToSection('home')" class="text-base font-medium text-slate-300 hover:text-primary cursor-pointer p-2" href="#home">Home</a>
-        <a @click.prevent="scrollToSection('experience')" class="text-base font-medium text-slate-300 hover:text-primary cursor-pointer p-2" href="#experience">Experience</a>
-        <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-300 hover:text-primary cursor-pointer p-2" href="#projects">Projects</a>
-        <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-300 hover:text-primary cursor-pointer p-2" href="#contact">Contact</a>
-         <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
+      <div v-show="isMenuOpen" class="md:hidden absolute top-16 left-0 w-full bg-white dark:bg-background-dark border-b border-slate-200 dark:border-white/5 p-4 flex flex-col gap-4 shadow-xl z-40 transition-colors duration-300">
+        <a @click.prevent="scrollToSection('home')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#home">Home</a>
+        <a @click.prevent="scrollToSection('experience')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#experience">Experience</a>
+        <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#projects">Projects</a>
+        <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2" href="#contact">Contact</a>
+         <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
             <span class="material-symbols-outlined text-[18px]">download</span>
             <span class="truncate">Resume</span>
         </button>
       </div>
     </header>
 
-    <main class="flex flex-1 flex-col relative overflow-hidden">
+    <main class="flex flex-1 flex-col relative overflow-hidden mt-16">
       
       <!-- Hero Section -->
       <section id="home" class="relative flex flex-col justify-center min-h-[90vh] py-20 pb-0">
@@ -151,26 +179,26 @@ const scrollToSection = (id) => {
           <div class="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
             <!-- Text Content -->
             <div class="flex flex-col gap-6 max-w-2xl reveal">
-              <div class="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-primary backdrop-blur-sm">
+              <div class="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 px-3 py-1 text-xs font-medium text-primary backdrop-blur-sm shadow-sm dark:shadow-none">
                 <span class="relative flex h-2 w-2">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
                 Available for new projects
               </div>
-              <h1 class="text-5xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 class="text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
                 Hi, I'm Stibin. <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-white/60">Flutter Developer.</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-slate-600 dark:to-white/60">Flutter Developer.</span>
               </h1>
-              <p class="text-lg text-slate-400 max-w-lg leading-relaxed">
+              <p class="text-lg text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed">
                 {{ summary }}
               </p>
               <div class="flex flex-wrap gap-4 pt-4">
-                <button @click="scrollToSection('projects')" class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-lg bg-primary px-8 font-medium text-background-dark transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-900">
+                <button @click="scrollToSection('projects')" class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-lg bg-primary px-8 font-medium text-white dark:text-background-dark transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-900">
                   <span class="mr-2">View Projects</span>
                   <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
                 </button>
-                <button @click="scrollToSection('contact')" class="inline-flex h-12 items-center justify-center rounded-lg border border-slate-700 bg-transparent px-8 font-medium text-white transition-all hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                <button @click="scrollToSection('contact')" class="inline-flex h-12 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent px-8 font-medium text-slate-900 dark:text-white transition-all hover:bg-slate-50 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-900">
                   Get in Touch
                 </button>
               </div>
@@ -179,7 +207,7 @@ const scrollToSection = (id) => {
                <div class="flex flex-col gap-3 pt-8">
                   <span class="text-sm font-medium uppercase tracking-wider text-slate-500">Tech Stack</span>
                   <div class="flex flex-wrap gap-2">
-                      <span v-for="skill in skills" :key="skill" class="px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold">
+                      <span v-for="skill in skills" :key="skill" class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold">
                           {{ skill }}
                       </span>
                   </div>
@@ -189,29 +217,13 @@ const scrollToSection = (id) => {
             
             <!-- Visual Anchor -->
             <div class="relative lg:h-full flex items-center justify-center lg:justify-end reveal" style="transition-delay: 200ms;">
-              <div class="relative aspect-square w-full max-w-md lg:max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 to-black border border-white/10 shadow-2xl group">
-                 <!-- Abstract Image -->
-                <div class="absolute inset-0 bg-cover bg-center opacity-80 mix-blend-overlay transition-transform duration-700 group-hover:scale-105" 
-                     style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');">
-                </div>
-                <!-- Floating UI Card overlay -->
-                <div class="absolute bottom-8 left-8 right-8 rounded-xl border border-white/10 bg-black/60 p-4 backdrop-blur-md shadow-lg">
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-3">
-                      <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                        <span class="material-symbols-outlined">smartphone</span>
-                      </div>
-                      <div>
-                        <div class="text-sm font-bold text-white">App Performance</div>
-                        <div class="text-xs text-slate-400">Optimized</div>
-                      </div>
-                    </div>
-                    <span class="text-xs font-mono text-green-400">60 FPS</span>
-                  </div>
-                  <div class="h-1.5 w-full rounded-full bg-white/10">
-                    <div class="h-1.5 w-[98%] rounded-full bg-primary shadow-[0_0_10px_rgba(56,189,248,0.5)]"></div>
-                  </div>
-                </div>
+              <div class="relative aspect-square w-full max-w-md lg:max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-black border border-slate-200 dark:border-white/10 shadow-2xl group transition-colors duration-300">
+                 <!-- Profile Image -->
+                 <!-- Replace the 'src' below with your actual photo URL -->
+                <img src="/profile.png"
+                     alt="Stibin Augustine" 
+                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
               </div>
             </div>
           </div>
@@ -221,25 +233,25 @@ const scrollToSection = (id) => {
       <!-- Experience Section -->
       <section id="experience" class="w-full xl:max-w-[1280px] mx-auto px-4 md:px-10 py-16">
            <div class="flex flex-col gap-2 mb-10 reveal">
-              <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-white mb-2">Professional Journey</h2>
+              <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white mb-2">Professional Journey</h2>
               <div class="h-1 w-20 bg-primary rounded-full"></div>
            </div>
 
-           <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-700 before:to-transparent">
+           <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 dark:before:via-slate-700 before:to-transparent">
               
               <div v-for="(job, index) in experience" :key="index" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal">
                   <!-- Icon -->
-                  <div class="flex items-center justify-center w-10 h-10 rounded-full border border-slate-700 bg-background-dark shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                  <div class="flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-background-dark shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors duration-300">
                       <span class="material-symbols-outlined text-primary text-sm">work</span>
                   </div>
                   <!-- Card -->
-                  <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-card-dark p-6 rounded-xl border border-slate-700/50 shadow-sm transition-transform hover:-translate-y-1">
+                  <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-card-dark p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition-transform hover:-translate-y-1 duration-300">
                       <div class="flex items-center justify-between space-x-2 mb-1">
-                          <h3 class="font-bold text-white">{{ job.role }}</h3>
+                          <h3 class="font-bold text-slate-900 dark:text-white">{{ job.role }}</h3>
                           <time class="font-mono text-xs text-primary">{{ job.period }}</time>
                       </div>
-                      <div class="text-slate-400 font-medium mb-2 text-sm">{{ job.company }} | {{ job.location }}</div>
-                      <p class="text-slate-400 text-sm leading-relaxed">
+                      <div class="text-slate-600 dark:text-slate-400 font-medium mb-2 text-sm">{{ job.company }} | {{ job.location }}</div>
+                      <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
                         {{ job.description }}
                       </p>
                   </div>
@@ -251,13 +263,13 @@ const scrollToSection = (id) => {
       <!-- Projects Grid -->
       <section id="projects" class="w-full xl:max-w-[1280px] mx-auto px-4 md:px-10 py-16">
         <div class="flex flex-col gap-2 mb-10 reveal">
-           <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-white mb-2">Selected Works</h2>
-           <p class="text-slate-400">A showcase of mobile excellence.</p>
+           <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white mb-2">Selected Works</h2>
+           <p class="text-slate-600 dark:text-slate-400">A showcase of mobile excellence.</p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <article v-for="(project, index) in projects" :key="index" class="reveal group flex flex-col bg-card-dark rounded-xl overflow-hidden border border-slate-700/50 shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300">
-            <div class="relative aspect-video w-full overflow-hidden bg-[#111318]">
+          <article v-for="(project, index) in projects" :key="index" class="reveal group flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700/50 shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300">
+            <div class="relative aspect-video w-full overflow-hidden bg-slate-100 dark:bg-[#111318]">
               <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" :style="{ backgroundImage: `url(${project.image})` }"></div>
               <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <span class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/20">View App</span>
@@ -265,20 +277,20 @@ const scrollToSection = (id) => {
             </div>
             <div class="flex flex-col flex-1 p-5 md:p-6 gap-4">
               <div class="flex flex-wrap gap-2">
-                <span v-for="tag in project.tags" :key="tag" class="px-2.5 py-1 rounded-md bg-blue-900/20 text-blue-300 text-xs font-semibold">{{ tag }}</span>
+                <span v-for="tag in project.tags" :key="tag" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 text-xs font-semibold">{{ tag }}</span>
               </div>
               <div class="flex flex-col gap-2">
-                <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors">{{ project.title }}</h3>
-                <p class="text-slate-400 text-sm leading-relaxed line-clamp-3">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ project.title }}</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3">
                    {{ project.description }}
                 </p>
               </div>
-              <div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-700/50">
-                <a class="flex items-center gap-2 text-sm font-semibold text-white hover:text-primary transition-colors" href="#">
+              <div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-700/50">
+                <a class="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white hover:text-primary transition-colors" href="#">
                   <span class="material-symbols-outlined text-[20px]">visibility</span>
                   Live Demo
                 </a>
-                <a class="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors" href="#">
+                <a class="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
                   <span class="material-symbols-outlined text-[20px]">code</span>
                   Code
                 </a>
@@ -289,14 +301,14 @@ const scrollToSection = (id) => {
       </section>
       
       <!-- Footer -->
-      <footer id="contact" class="w-full border-t border-slate-800 bg-background-dark py-10">
+      <footer id="contact" class="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-background-dark py-10 transition-colors duration-300">
         <div class="max-w-[1280px] mx-auto px-4 md:px-10 flex flex-col md:flex-row items-center justify-between gap-6 reveal">
           <div class="flex flex-col gap-2 text-center md:text-left">
-            <p class="text-white text-lg font-bold">{{ name }}</p>
-            <p class="text-slate-400 text-sm">Crafting exceptional mobile experiences.</p>
+            <p class="text-slate-900 dark:text-white text-lg font-bold">{{ name }}</p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm">Crafting exceptional mobile experiences.</p>
           </div>
           <div class="flex items-center gap-6">
-            <a class="text-slate-400 hover:text-white transition-colors" href="mailto:contact@stibinaugustine.com">
+            <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors" href="mailto:contact@stibinaugustine.com">
                <span class="flex items-center gap-2">
                    <span class="material-symbols-outlined">mail</span>
                    <span class="text-sm">Contact Me</span>
@@ -304,7 +316,7 @@ const scrollToSection = (id) => {
             </a>
           </div>
         </div>
-        <div class="max-w-[1280px] mx-auto px-4 md:px-10 mt-8 pt-8 border-t border-slate-800 text-center md:text-left">
+        <div class="max-w-[1280px] mx-auto px-4 md:px-10 mt-8 pt-8 border-t border-slate-200 dark:border-slate-800 text-center md:text-left">
           <p class="text-slate-500 text-sm">© 2026 {{ name }}. All rights reserved.</p>
         </div>
       </footer>
