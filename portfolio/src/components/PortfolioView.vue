@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const isDark = ref(true)
+const isDark = ref(false)
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -24,34 +24,15 @@ const handleMouseMove = (event) => {
 }
 
 const typingText = ref('')
-const roles = ['Flutter Developer.', 'Mobile Architect.', 'UI/UX Enthusiast.']
-let roleIndex = 0
+const textToType = 'Flutter Developer.'
 let charIndex = 0
-let isDeleting = false
 
 const typeEffect = () => {
-  const currentRole = roles[roleIndex]
-  
-  if (isDeleting) {
-    typingText.value = currentRole.substring(0, charIndex - 1)
-    charIndex--
-  } else {
-    typingText.value = currentRole.substring(0, charIndex + 1)
+  if (charIndex <= textToType.length) {
+    typingText.value = textToType.substring(0, charIndex)
     charIndex++
+    setTimeout(typeEffect, 100)
   }
-
-  let typeSpeed = isDeleting ? 50 : 100
-
-  if (!isDeleting && charIndex === currentRole.length) {
-    isDeleting = true
-    typeSpeed = 2000
-  } else if (isDeleting && charIndex === 0) {
-    isDeleting = false
-    roleIndex = (roleIndex + 1) % roles.length
-    typeSpeed = 500
-  }
-
-  setTimeout(typeEffect, typeSpeed)
 }
 
 const name = "Stibin Augustine"
@@ -137,12 +118,12 @@ const isMenuOpen = ref(false)
 
 onMounted(() => {
   // Check for saved user preference
-  if (localStorage.theme === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-    isDark.value = false
-    document.documentElement.classList.remove('dark')
-  } else {
+  if (localStorage.theme === 'dark') {
     isDark.value = true
     document.documentElement.classList.add('dark')
+  } else {
+    isDark.value = false
+    document.documentElement.classList.remove('dark')
   }
 
   const observer = new IntersectionObserver((entries) => {
