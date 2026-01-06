@@ -61,21 +61,43 @@ const experience = ref([
     company: 'App Station',
     role: 'Flutter Developer',
     period: '09/2024 - Current',
-    description: 'Developed mobile applications using Flutter framework for user-friendly interfaces. Collaborated with designers and integrated APIs to enhance app performance.',
+    description: [
+      'Developed Khadoom, a cross-platform Flutter Mobile & Web application for the Qutar Olympic Committee',
+      'Implemented Clean Architecture for scalability and maintainability',
+      'Used Riverpod for efficient and predictable state management',
+      'Built responsive and reusable UI components optimized for Flutter Web',
+      'Integrated REST APIs and managed data flow across layers',
+      'Implemented features such as leave requests, approvals, and internal workflow management'
+    ],
     location: 'Trivandrum, India'
   },
   {
     company: 'Active Lobby',
     role: 'Flutter Developer',
     period: '10/2022 - 09/2024',
-    description: 'Developed intuitive mobile apps. Conducted code reviews and integrated APIs. Troubleshot and resolved bugs to improve reliability.',
+    description: [
+      'Developed LM Pay, a Flutter Web & Mobile money exchange application',
+      'Enabled international remittance from UAE to multiple countries with multi-currency support',
+      'Implemented MVVM architecture for clean separation of UI, business logic, and data layers',
+      'Used Provider for efficient state management',
+      'Built responsive, reusable UI components for web and mobile',
+      'Integrated REST APIs for transactions, exchange rates, and user operations',
+      'Focused on performance, security, and scalable code practices'
+    ],
     location: 'Kochi'
   },
   {
     company: 'Tazy Solution',
     role: 'Flutter Developer',
     period: '01/2022 - 10/2022',
-    description: 'Implemented state management solutions. Participated in Agile ceremonies and optimized code.',
+    description: [
+      'Developed an internal Flutter mobile application for blood donation management',
+      'Implemented donor registration, blood group filtering, and request workflows',
+      'Used Firebase (Authentication, Firestore/Realtime DB, Notifications)',
+      'Applied Provider for efficient state management',
+      'Built clean, responsive, and reusable UI components',
+      'Ensured secure and reliable data handling for internal organizational use'
+    ],
     location: 'Kannur, India'
   }
 ])
@@ -84,7 +106,7 @@ const projects = ref([
   {
     title: 'Spendly',
     tags: ['Flutter', 'Dart', 'Firebase','Riverpod'],
-    description: 'Spendly is a smart expense tracker that helps you monitor your daily spending with clear statistics.',
+    description: 'Spendly is a smart expense tracker that helps you easily monitor your daily spending with clear and detailed statistics. It allows you to track expenses over time, understand your spending habits, and manage your finances more effectively with monthly and yearly insights.',
     image: '/spendly.png',
     detailsLink: '#',
     sourceLink: '#'
@@ -92,7 +114,7 @@ const projects = ref([
   {
     title: 'Luckey Spinner',
     tags: ['Flutter', 'Dart', 'SqfLite','Riverpod'],
-    description: 'Real-time chat application with group messaging, media sharing, and push notifications.',
+    description: 'Lucky Spinner lets you add names, spin the wheel, and instantly pick a random winner. It’s perfect for games, quick decisions, giveaways, and fun group activities.',
     image: '/luckey_spinner.png',
     detailsLink: '#',
     sourceLink: '#'
@@ -100,7 +122,7 @@ const projects = ref([
   {
     title: 'Flow Tracker',
     tags: ['Flutter', 'Dart', 'SqfLite', 'Riverpod'],
-    description: 'Productivity tool for tracking daily tasks with offline support and data synchronization.',
+    description: 'Flow Tracker is a period tracking app that helps women monitor their monthly cycle, predict upcoming periods and ovulation days, and receive timely reminders to stay prepared and informed.',
     image: '/flow_track.png',
     detailsLink: '#',
 // ... existing code ...
@@ -159,6 +181,17 @@ const scrollToSection = (id) => {
   const element = document.getElementById(id)
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
+// Project Description Expansion
+const expandedProjects = ref([])
+
+const toggleExpand = (index) => {
+  if (expandedProjects.value.includes(index)) {
+    expandedProjects.value = expandedProjects.value.filter(i => i !== index)
+  } else {
+    expandedProjects.value.push(index)
   }
 }
 
@@ -340,7 +373,10 @@ const closeImageModal = () => {
                           <time class="font-mono text-xs text-primary">{{ job.period }}</time>
                       </div>
                       <div class="text-slate-600 dark:text-slate-400 font-medium mb-2 text-sm">{{ job.company }} | {{ job.location }}</div>
-                      <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                      <ul v-if="Array.isArray(job.description)" class="list-disc list-outside ml-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed space-y-1">
+                        <li v-for="(point, i) in job.description" :key="i">{{ point }}</li>
+                      </ul>
+                      <p v-else class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
                         {{ job.description }}
                       </p>
                   </div>
@@ -370,19 +406,16 @@ const closeImageModal = () => {
               </div>
               <div class="flex flex-col gap-2">
                 <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ project.title }}</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3">
+                <p :class="['text-slate-600 dark:text-slate-400 text-sm leading-relaxed transition-all duration-300', expandedProjects.includes(index) ? '' : 'line-clamp-3']">
                    {{ project.description }}
                 </p>
-              </div>
-              <div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-700/50">
-                <a class="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white hover:text-primary transition-colors" href="#">
-                  <span class="material-symbols-outlined text-[20px]">visibility</span>
-                  Live Demo
-                </a>
-                <a class="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" href="#">
-                  <span class="material-symbols-outlined text-[20px]">code</span>
-                  Code
-                </a>
+                <button 
+                  @click.stop="toggleExpand(index)" 
+                  class="text-primary text-sm font-medium mt-1 hover:underline focus:outline-none self-start flex items-center gap-1"
+                >
+                  {{ expandedProjects.includes(index) ? 'Show Less' : 'Read More' }}
+                  <span class="material-symbols-outlined text-sm transition-transform duration-300" :class="{ 'rotate-180': expandedProjects.includes(index) }">expand_more</span>
+                </button>
               </div>
             </div>
           </article>
