@@ -235,7 +235,7 @@ const closeImageModal = () => {
              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </a>
           <a @click.prevent="scrollToSection('about')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#about">
-            About Me
+            About
              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
           </a>
           <a @click.prevent="scrollToSection('contact')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#contact">
@@ -338,7 +338,7 @@ const closeImageModal = () => {
             
             <!-- Visual Anchor (Desktop Only) -->
             <div class="hidden lg:flex relative h-full items-center justify-end reveal" style="transition-delay: 200ms;">
-              <div class="relative aspect-square w-full max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-black border border-slate-200 dark:border-white/10 shadow-2xl group transition-all duration-100 ease-out"
+              <div class="relative aspect-square w-full max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-background-light to-slate-100 dark:from-background-dark dark:to-[#020617] border border-slate-200 dark:border-white/10 shadow-2xl group transition-all duration-100 ease-out"
                    :style="{ transform: `perspective(1000px) rotateY(${mouseX * 5}deg) rotateX(${mouseY * -5}deg)` }">
                  <!-- Profile Image -->
                  <!-- Replace the 'src' below with your actual photo URL -->
