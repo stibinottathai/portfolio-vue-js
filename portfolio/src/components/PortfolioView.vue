@@ -247,10 +247,10 @@ const closeImageModal = () => {
              <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
                 <span class="material-symbols-outlined text-[20px]">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
              </button>
-             <button class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
+             <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
                 <span class="material-symbols-outlined text-[18px]">download</span>
                 <span class="truncate">Resume</span>
-            </button>
+            </a>
         </div>
         <div class="flex items-center md:hidden gap-4">
           <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
@@ -268,10 +268,10 @@ const closeImageModal = () => {
         <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#projects">Projects</a>
         <a @click.prevent="scrollToSection('about')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#about">About Me</a>
         <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#contact">Contact</a>
-         <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
+         <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
             <span class="material-symbols-outlined text-[18px]">download</span>
             <span class="truncate">Resume</span>
-        </button>
+        </a>
       </div>
     </header>
 
