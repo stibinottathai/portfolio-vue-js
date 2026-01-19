@@ -125,7 +125,14 @@ const projects = ref([
     description: 'Flow Tracker is a period tracking app that helps women monitor their monthly cycle, predict upcoming periods and ovulation days, and receive timely reminders to stay prepared and informed.',
     image: '/flow_track.png',
     detailsLink: '#',
-// ... existing code ...
+    sourceLink: '#'
+  },
+  {
+    title: 'Dately',
+    tags: ['Flutter', 'Dart', 'Firebase', 'Real-time Chat'],
+    description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts. Chats are only available between matched users and are disabled upon unmatching.',
+    image: '/dately.png',
+    detailsLink: '#',
     sourceLink: '#'
   }
 ])
