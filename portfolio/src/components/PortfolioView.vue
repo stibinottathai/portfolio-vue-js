@@ -111,7 +111,14 @@ const projects = ref([
     detailsLink: '#',
     sourceLink: '#'
   },
-
+  {
+    title: 'Dately',
+    tags: ['Flutter', 'Dart', 'Supabase', 'Real-time Chat'],
+    description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts. Chats are only available between matched users and are disabled upon unmatching.',
+    image: '/dately.png',
+    detailsLink: '#',
+    sourceLink: '#'
+  },
   {
     title: 'Spendly',
     tags: ['Flutter', 'Dart', 'Firebase','Riverpod'],
@@ -136,14 +143,7 @@ const projects = ref([
     detailsLink: '#',
     sourceLink: '#'
   },
-  {
-    title: 'Dately',
-    tags: ['Flutter', 'Dart', 'Supabase', 'Real-time Chat'],
-    description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts. Chats are only available between matched users and are disabled upon unmatching.',
-    image: '/dately.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
+
   {
     title: 'Time Tracker',
     tags: ['Flutter', 'Dart', 'Sqflite'],
