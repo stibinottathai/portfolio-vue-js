@@ -104,6 +104,15 @@ const experience = ref([
 
 const projects = ref([
   {
+    title: 'Shop Ledger',
+    tags: ['Flutter', 'Dart', 'Mobile App'],
+    description: 'Shop Ledger is a modern mobile application designed to simplify and digitize daily shop operations. It helps shop owners efficiently manage sales, purchases, expenses, credits, debits, customers, suppliers, and stock, all in one place.',
+    image: '/shop_ledger.png',
+    detailsLink: '#',
+    sourceLink: '#'
+  },
+
+  {
     title: 'Spendly',
     tags: ['Flutter', 'Dart', 'Firebase','Riverpod'],
     description: 'Spendly is a smart expense tracker that helps you easily monitor your daily spending with clear and detailed statistics. It allows you to track expenses over time, understand your spending habits, and manage your finances more effectively with monthly and yearly insights.',
@@ -129,9 +138,17 @@ const projects = ref([
   },
   {
     title: 'Dately',
-    tags: ['Flutter', 'Dart', 'Firebase', 'Real-time Chat'],
+    tags: ['Flutter', 'Dart', 'Supabase', 'Real-time Chat'],
     description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts. Chats are only available between matched users and are disabled upon unmatching.',
     image: '/dately.png',
+    detailsLink: '#',
+    sourceLink: '#'
+  },
+  {
+    title: 'Time Tracker',
+    tags: ['Flutter', 'Dart', 'Sqflite'],
+    description: 'Time is a minimal and user-friendly mobile application designed to help individuals track their daily office working hours with precision. The app focuses on simplicity, clarity, and real-time feedback, making it ideal for employees who want to monitor their check-in, check-out, and break durations effortlessly.',
+    image: '/Time_Tracker.png',
     detailsLink: '#',
     sourceLink: '#'
   }
