@@ -105,7 +105,7 @@ const experience = ref([
 const projects = ref([
   {
     title: 'Shop Ledger',
-    tags: ['Flutter', 'Dart', 'Mobile App'],
+    tags: ['Flutter', 'Dart', 'Riverpod', 'Supabase'],
     description: 'Shop Ledger is a modern mobile application designed to simplify and digitize daily shop operations. It helps shop owners efficiently manage sales, purchases, expenses, credits, debits, customers, suppliers, and stock, all in one place.',
     image: '/shop_ledger.png',
     detailsLink: '#',
