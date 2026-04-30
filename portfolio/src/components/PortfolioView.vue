@@ -149,8 +149,8 @@ const projects = ref([
 
 const contactDetails = ref({
   email: 'stibinaugustine3047@gmail.com',
-  phone: '+91 884 805 3964',
-  location: 'Kannur, Kerala, India',
+  phone: '+971 58 308 1024',
+  location: 'Bur Dubai, Dubai, UAE',
   social: [
     { name: 'GitHub', icon: 'code', link: 'https://github.com/stibinottathai', text: 'github.com/stibin' },
     { name: 'LinkedIn', icon: 'work', link: 'https://in.linkedin.com/in/stibin-augustine-8075b1197', text: 'linkedin.com/in/stibin' },
