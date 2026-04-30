@@ -1,17 +1,13 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const isDark = ref(false)
+// Theme
+const isDark = ref(true)
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
-  if (isDark.value) {
-    document.documentElement.classList.add('dark')
-    localStorage.theme = 'dark'
-  } else {
-    document.documentElement.classList.remove('dark')
-    localStorage.theme = 'light'
-  }
+  document.documentElement.classList.toggle('light', !isDark.value)
+  localStorage.theme = isDark.value ? 'dark' : 'light'
 }
 
 // Interactive Animations
@@ -32,35 +28,25 @@ const typeEffect = () => {
   if (charIndex <= textToType.length) {
     typingText.value = textToType.substring(0, charIndex)
     charIndex++
-    setTimeout(typeEffect, 100)
+    setTimeout(typeEffect, 80)
   } else {
     isTyping.value = false
   }
 }
 
 const name = "Stibin Augustine"
-// ... existing code ...
-const summary = "Flutter Developer with strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management."
+const summary = "Flutter Developer with 4+ years of experience and strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management."
 
 const skills = ref([
-  'Flutter',
-  'Dart',
-  'Firebase',
-  'REST API',
-  'State Management',
-  'Clean Architecture',
-  'Git',
-  'Riverpod',
-  'Bloc',
-  'Provider',
-  'UI/UX Implementation'
+  'Flutter', 'Dart', 'Firebase', 'REST API', 'State Management',
+  'Clean Architecture', 'Git', 'Riverpod', 'Bloc', 'Provider', 'UI/UX Implementation'
 ])
 
 const experience = ref([
   {
     company: 'App Station',
     role: 'Flutter Developer',
-    period: '09/2024 - Current',
+    period: '09/2024 - 02/2026',
     description: [
       'Developed Khadoom, a cross-platform Flutter Mobile & Web application for the Qutar Olympic Committee',
       'Implemented Clean Architecture for scalability and maintainability',
@@ -104,6 +90,14 @@ const experience = ref([
 
 const projects = ref([
   {
+    title: 'QuickReceipt',
+    tags: ['Flutter', 'Dart', 'Bloc', 'Firebase'],
+    description: 'QuickReceipt is an all-in-one billing and business management app designed to simplify your daily operations. Instantly generate and print bills using a Bluetooth printer, while seamlessly managing your inventory, suppliers, and customers in one place. With powerful insights, organized records, and smart tracking, QuickReceipt helps you run your shop efficiently and make better business decisions—faster and easier than ever.',
+    image: '/quick_receipt.jpg',
+    detailsLink: '#',
+    sourceLink: '#'
+  },
+  {
     title: 'Shop Ledger',
     tags: ['Flutter', 'Dart', 'Riverpod', 'Supabase'],
     description: 'Shop Ledger is a modern mobile application designed to simplify and digitize daily shop operations. It helps shop owners efficiently manage sales, purchases, expenses, credits, debits, customers, suppliers, and stock, all in one place.',
@@ -114,14 +108,14 @@ const projects = ref([
   {
     title: 'Dately',
     tags: ['Flutter', 'Dart', 'Supabase', 'Real-time Chat'],
-    description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts. Chats are only available between matched users and are disabled upon unmatching.',
+    description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts.',
     image: '/dately.png',
     detailsLink: '#',
     sourceLink: '#'
   },
   {
     title: 'Spendly',
-    tags: ['Flutter', 'Dart', 'Firebase','Riverpod'],
+    tags: ['Flutter', 'Dart', 'Firebase', 'Riverpod'],
     description: 'Spendly is a smart expense tracker that helps you easily monitor your daily spending with clear and detailed statistics. It allows you to track expenses over time, understand your spending habits, and manage your finances more effectively with monthly and yearly insights.',
     image: '/spendly.png',
     detailsLink: '#',
@@ -129,8 +123,8 @@ const projects = ref([
   },
   {
     title: 'Luckey Spinner',
-    tags: ['Flutter', 'Dart', 'SqfLite','Riverpod'],
-    description: 'Lucky Spinner lets you add names, spin the wheel, and instantly pick a random winner. It’s perfect for games, quick decisions, giveaways, and fun group activities.',
+    tags: ['Flutter', 'Dart', 'SqfLite', 'Riverpod'],
+    description: 'Lucky Spinner lets you add names, spin the wheel, and instantly pick a random winner. It\'s perfect for games, quick decisions, giveaways, and fun group activities.',
     image: '/luckey_spinner.png',
     detailsLink: '#',
     sourceLink: '#'
@@ -143,11 +137,10 @@ const projects = ref([
     detailsLink: '#',
     sourceLink: '#'
   },
-
   {
     title: 'Time Tracker',
     tags: ['Flutter', 'Dart', 'Sqflite'],
-    description: 'Time is a minimal and user-friendly mobile application designed to help individuals track their daily office working hours with precision. The app focuses on simplicity, clarity, and real-time feedback, making it ideal for employees who want to monitor their check-in, check-out, and break durations effortlessly.',
+    description: 'Time is a minimal and user-friendly mobile application designed to help individuals track their daily office working hours with precision. The app focuses on simplicity, clarity, and real-time feedback.',
     image: '/Time_Tracker.png',
     detailsLink: '#',
     sourceLink: '#'
@@ -161,20 +154,16 @@ const contactDetails = ref({
   social: [
     { name: 'GitHub', icon: 'code', link: 'https://github.com/stibinottathai', text: 'github.com/stibin' },
     { name: 'LinkedIn', icon: 'work', link: 'https://in.linkedin.com/in/stibin-augustine-8075b1197', text: 'linkedin.com/in/stibin' },
-    
   ]
 })
 
 const isMenuOpen = ref(false)
 
 onMounted(() => {
-  // Check for saved user preference
-  if (localStorage.theme === 'dark') {
-    isDark.value = true
-    document.documentElement.classList.add('dark')
-  } else {
+  // Restore saved theme
+  if (localStorage.theme === 'light') {
     isDark.value = false
-    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.add('light')
   }
 
   const observer = new IntersectionObserver((entries) => {
@@ -183,15 +172,12 @@ onMounted(() => {
         entry.target.classList.add('active')
       }
     })
-  }, {
-    threshold: 0.1
-  })
+  }, { threshold: 0.1 })
 
   document.querySelectorAll('.reveal').forEach((el) => {
     observer.observe(el)
   })
 
-  // Start animations
   typeEffect()
   window.addEventListener('mousemove', handleMouseMove)
 })
@@ -208,9 +194,7 @@ const scrollToSection = (id) => {
   }
 }
 
-// Project Description Expansion
 const expandedProjects = ref([])
-
 const toggleExpand = (index) => {
   if (expandedProjects.value.includes(index)) {
     expandedProjects.value = expandedProjects.value.filter(i => i !== index)
@@ -219,14 +203,11 @@ const toggleExpand = (index) => {
   }
 }
 
-// Image Modal State
 const selectedImage = ref(null)
-
 const openImageModal = (imageUrl) => {
   selectedImage.value = imageUrl
-  document.body.style.overflow = 'hidden' // Prevent scrolling when modal is open
+  document.body.style.overflow = 'hidden'
 }
-
 const closeImageModal = () => {
   selectedImage.value = null
   document.body.style.overflow = 'auto'
@@ -234,326 +215,465 @@ const closeImageModal = () => {
 </script>
 
 <template>
-  <div class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden transition-colors duration-300">
-    
-    <!-- Navigation -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md transition-colors duration-300">
-      <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <div class="flex items-center gap-3 group cursor-pointer" @click="scrollToSection('home')">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-all duration-300 group-hover:rotate-12 group-hover:scale-110 group-hover:bg-primary group-hover:text-white shadow-sm group-hover:shadow-primary/50">
-            <span class="material-symbols-outlined text-2xl">terminal</span>
+  <div class="portfolio-root">
+    <!-- Grain overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="nav">
+      <div class="nav-inner">
+        <div class="nav-logo" @click="scrollToSection('home')">
+          <div class="nav-logo-icon">
+            <span class="material-symbols-outlined" style="font-size:22px">terminal</span>
           </div>
-          <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white transition-all duration-300 group-hover:tracking-wider group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-purple-500">{{ name }}</span>
+          <span class="nav-logo-text">{{ name }}</span>
         </div>
-        <nav class="hidden md:flex items-center gap-8">
-          <a @click.prevent="scrollToSection('home')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#home">
-            Home
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-          </a>
-          <a @click.prevent="scrollToSection('experience')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#experience">
-            Experience
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-          </a>
-          <a @click.prevent="scrollToSection('projects')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#projects">
-            Projects
-             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-          </a>
-          <a @click.prevent="scrollToSection('about')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#about">
-            About
-             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-          </a>
-          <a @click.prevent="scrollToSection('contact')" class="relative group text-sm font-medium text-slate-600 dark:text-slate-300 transition-colors hover:text-primary cursor-pointer py-1" href="#contact">
-            Contact
-             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-          </a>
+
+        <nav class="nav-links">
+          <a class="nav-link" @click.prevent="scrollToSection('home')" href="#home">Home</a>
+          <a class="nav-link" @click.prevent="scrollToSection('experience')" href="#experience">Experience</a>
+          <a class="nav-link" @click.prevent="scrollToSection('projects')" href="#projects">Projects</a>
+          <a class="nav-link" @click.prevent="scrollToSection('about')" href="#about">About</a>
+          <a class="nav-link" @click.prevent="scrollToSection('contact')" href="#contact">Contact</a>
         </nav>
-        <div class="hidden md:flex items-center gap-4">
-             <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                <span class="material-symbols-outlined text-[20px]">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
-             </button>
-             <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
-                <span class="material-symbols-outlined text-[18px]">download</span>
-                <span class="truncate">Resume</span>
-            </a>
-        </div>
-        <div class="flex items-center md:hidden gap-4">
-          <button @click="toggleTheme" class="flex items-center justify-center h-9 w-9 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-            <span class="material-symbols-outlined text-[20px]">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
+
+        <div class="nav-actions">
+          <button @click="toggleTheme" class="theme-toggle-btn" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+            <span class="material-symbols-outlined" style="font-size:20px">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
           </button>
-          <button @click="isMenuOpen = !isMenuOpen" class="text-slate-900 dark:text-white">
+          <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8125rem;">
+            <span class="material-symbols-outlined" style="font-size:16px">download</span>
+            Resume
+          </a>
+        </div>
+
+        <div class="nav-mobile-controls">
+          <button @click="toggleTheme" class="theme-toggle-btn">
+            <span class="material-symbols-outlined" style="font-size:20px">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
+          </button>
+          <button class="nav-mobile-hamburger" @click="isMenuOpen = !isMenuOpen">
             <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
           </button>
         </div>
       </div>
 
-      <div v-show="isMenuOpen" class="md:hidden absolute top-16 left-0 w-full bg-white dark:bg-background-dark border-b border-slate-200 dark:border-white/5 p-4 flex flex-col gap-4 shadow-xl z-40 transition-colors duration-300">
-        <a @click.prevent="scrollToSection('home')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#home">Home</a>
-        <a @click.prevent="scrollToSection('experience')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#experience">Experience</a>
-        <a @click.prevent="scrollToSection('projects')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#projects">Projects</a>
-        <a @click.prevent="scrollToSection('about')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#about">About Me</a>
-        <a @click.prevent="scrollToSection('contact')" class="text-base font-medium text-slate-600 dark:text-slate-300 hover:text-primary cursor-pointer p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-white/5 transition-all hover:translate-x-2" href="#contact">Contact</a>
-         <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-sky-400 transition-colors gap-2">
-            <span class="material-symbols-outlined text-[18px]">download</span>
-            <span class="truncate">Resume</span>
+      <!-- Mobile menu -->
+      <div v-show="isMenuOpen" class="nav-mobile-menu">
+        <a class="nav-mobile-link" @click.prevent="scrollToSection('home')" href="#home">Home</a>
+        <a class="nav-mobile-link" @click.prevent="scrollToSection('experience')" href="#experience">Experience</a>
+        <a class="nav-mobile-link" @click.prevent="scrollToSection('projects')" href="#projects">Projects</a>
+        <a class="nav-mobile-link" @click.prevent="scrollToSection('about')" href="#about">About</a>
+        <a class="nav-mobile-link" @click.prevent="scrollToSection('contact')" href="#contact">Contact</a>
+        <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="btn btn-primary" style="width:100%; margin-top: 0.5rem;">
+          <span class="material-symbols-outlined" style="font-size:16px">download</span>
+          Resume
         </a>
       </div>
     </header>
 
-    <main class="flex flex-1 flex-col relative overflow-hidden mt-16">
-      
-      <!-- Hero Section -->
-      <section id="home" class="relative flex flex-col justify-start lg:justify-center min-h-[90vh] pt-8 lg:py-20 pb-0">
-        <!-- Background Gradient Effect -->
-        <div class="absolute top-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-primary/20 blur-[120px] pointer-events-none transition-transform duration-100 ease-out" :style="{ transform: `translate(${mouseX * -30}px, ${mouseY * -30}px)` }"></div>
-        <div class="absolute bottom-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px] pointer-events-none transition-transform duration-100 ease-out" :style="{ transform: `translate(${mouseX * 30}px, ${mouseY * 30}px)` }"></div>
-        
-        <div class="container mx-auto px-6 lg:px-8 relative z-10">
-          <div class="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
-            <!-- Text Content -->
-            <div class="flex flex-col gap-6 max-w-2xl reveal">
-              
-              <!-- Mobile Header: Image + Name -->
-              <div class="flex items-center gap-6 lg:block">
-                  <!-- Mobile Image -->
-                  <div class="lg:hidden shrink-0 relative w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 dark:border-white/10 shadow-lg">
-                      <img src="/profile.png" alt="Stibin Augustine" class="absolute inset-0 h-full w-full object-cover" />
-                  </div>
-                  
-                  <div class="flex flex-col gap-4">
-                      <div class="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-white/5 px-3 py-1 text-xs font-medium text-primary backdrop-blur-sm shadow-sm dark:shadow-none">
-                        <span class="relative flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                        </span>
-                        Available for new projects
-                      </div>
-                      <h1 class="text-3xl md:text-5xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
-                        Hi, I'm Stibin. <br class="hidden lg:block"/>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-slate-600 dark:to-white/60 min-h-[1.2em] inline-block">{{ typingText }}</span>
-                        <span v-show="isTyping" class="animate-pulse text-primary font-thin">|</span>
-                      </h1>
-                  </div>
-              </div>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main style="margin-top: 64px;">
 
-              <p class="text-lg text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed">
-                {{ summary }}
-              </p>
-              <div class="flex flex-wrap gap-4 pt-4">
-                <button @click="scrollToSection('projects')" class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-lg bg-primary px-8 font-medium text-white dark:text-background-dark transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-900">
-                  <span class="mr-2">View Projects</span>
-                  <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
-                </button>
-                <button @click="scrollToSection('contact')" class="inline-flex h-12 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent px-8 font-medium text-slate-900 dark:text-white transition-all hover:bg-slate-50 dark:hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-900">
-                  Get in Touch
-                </button>
-              </div>
-              
-              <!-- Tech Stack Indicators -->
-               <div class="flex flex-col gap-3 pt-8">
-                  <span class="text-sm font-medium uppercase tracking-wider text-slate-500">Tech Stack</span>
-                  <div class="flex flex-wrap gap-2">
-                      <span v-for="skill in skills" :key="skill" class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold">
-                          {{ skill }}
-                      </span>
-                  </div>
-              </div>
+      <!-- ===== HERO ===== -->
+      <section id="home" class="hero-section">
+        <div class="dot-grid"></div>
+        <div class="orb orb-violet" :style="{ transform: `translate(${mouseX * -30}px, ${mouseY * -30}px)` }"></div>
+        <div class="orb orb-cyan" :style="{ transform: `translate(${mouseX * 30}px, ${mouseY * 30}px)` }"></div>
 
+        <div class="container hero-grid">
+          <!-- Text Side -->
+          <div class="hero-text reveal">
+            <!-- Mobile profile -->
+            <div class="hero-mobile-header">
+              <div class="hero-mobile-avatar">
+                <div class="profile-ring">
+                  <img src="/profile.png" alt="Stibin Augustine" width="80" height="80" style="width:80px;height:80px;object-fit:cover;">
+                </div>
+              </div>
+              <div>
+                <div class="badge" style="margin-bottom: 0.75rem;">
+                  <span class="pulse-dot"></span>
+                  Available for new projects
+                </div>
+                <h1>Hi, I'm Stibin.<br><span class="text-gradient">{{ typingText }}</span><span v-show="isTyping" class="typing-cursor"></span></h1>
+              </div>
             </div>
-            
-            <!-- Visual Anchor (Desktop Only) -->
-            <div class="hidden lg:flex relative h-full items-center justify-end reveal" style="transition-delay: 200ms;">
-              <div class="relative aspect-square w-full max-w-lg rounded-2xl overflow-hidden bg-gradient-to-br from-background-light to-slate-100 dark:from-background-dark dark:to-[#020617] border border-slate-200 dark:border-white/10 shadow-2xl group transition-all duration-100 ease-out"
-                   :style="{ transform: `perspective(1000px) rotateY(${mouseX * 5}deg) rotateX(${mouseY * -5}deg)` }">
-                 <!-- Profile Image -->
-                 <!-- Replace the 'src' below with your actual photo URL -->
-                <img src="/profile.png"
-                     alt="Stibin Augustine" 
-                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+
+            <!-- Desktop badge (hidden on mobile since it's in header above) -->
+            <div class="hero-desktop-badge">
+              <div class="badge" style="margin-bottom: 0.5rem;">
+                <span class="pulse-dot"></span>
+                Available for new projects
+              </div>
+              <h1>Hi, I'm Stibin.<br><span class="text-gradient">{{ typingText }}</span><span v-show="isTyping" class="typing-cursor"></span></h1>
+            </div>
+
+            <p style="font-size: 1.125rem; max-width: 520px; line-height: 1.75;">{{ summary }}</p>
+
+            <div class="hero-ctas">
+              <button @click="scrollToSection('projects')" class="btn btn-primary btn-lg">
+                View Projects
+                <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
+              </button>
+              <button @click="scrollToSection('contact')" class="btn btn-ghost btn-lg">
+                Get in Touch
+              </button>
+            </div>
+
+            <div class="hero-skills">
+              <span style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">Tech Stack</span>
+              <div class="hero-skills-list">
+                <span v-for="(skill, i) in skills" :key="skill" class="skill-tag reveal" :class="'reveal-delay-' + ((i % 5) + 1)">{{ skill }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Image (Desktop) -->
+          <div class="hero-image reveal reveal-delay-2">
+            <div class="profile-card" :style="{ transform: `perspective(1000px) rotateY(${mouseX * 5}deg) rotateX(${mouseY * -5}deg)` }">
+              <img src="/profile.png" alt="Stibin Augustine">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== EXPERIENCE ===== -->
+      <section id="experience" class="section">
+        <div class="container">
+          <div class="section-header reveal">
+            <h2>Professional Journey</h2>
+            <div class="accent-line"></div>
+          </div>
+
+          <div class="timeline">
+            <div v-for="(job, index) in experience" :key="index" class="timeline-item reveal" :class="'reveal-delay-' + (index + 1)">
+              <div class="timeline-node"></div>
+              <div class="glass-card" style="padding: 1.5rem;">
+                <div class="timeline-card-header">
+                  <div>
+                    <h3 style="margin-bottom: 0.25rem;">{{ job.role }}</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">{{ job.company }} · {{ job.location }}</p>
+                  </div>
+                  <span class="tag">{{ job.period }}</span>
+                </div>
+                <ul v-if="Array.isArray(job.description)" class="timeline-points">
+                  <li v-for="(point, i) in job.description" :key="i">{{ point }}</li>
+                </ul>
+                <p v-else style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 1rem;">{{ job.description }}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Experience Section -->
-      <section id="experience" class="w-full xl:max-w-[1280px] mx-auto px-4 md:px-10 py-16">
-           <div class="flex flex-col gap-2 mb-10 reveal">
-              <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white mb-2">Professional Journey</h2>
-              <div class="h-1 w-20 bg-primary rounded-full"></div>
-           </div>
+      <!-- ===== PROJECTS ===== -->
+      <section id="projects" class="section">
+        <div class="container">
+          <div class="section-header reveal">
+            <h2>Selected Works</h2>
+            <div class="accent-line"></div>
+            <p class="section-subtitle">A showcase of mobile excellence.</p>
+          </div>
 
-           <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 dark:before:via-slate-700 before:to-transparent">
-              
-              <div v-for="(job, index) in experience" :key="index" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active reveal">
-                  <!-- Icon -->
-                  <div class="flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-background-dark shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors duration-300">
-                      <span class="material-symbols-outlined text-primary text-sm">work</span>
-                  </div>
-                  <!-- Card -->
-                  <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-card-dark p-6 rounded-xl border border-slate-200 dark:border-slate-700/50 shadow-sm transition-transform hover:-translate-y-1 duration-300">
-                      <div class="flex items-center justify-between space-x-2 mb-1">
-                          <h3 class="font-bold text-slate-900 dark:text-white">{{ job.role }}</h3>
-                          <time class="font-mono text-xs text-primary">{{ job.period }}</time>
-                      </div>
-                      <div class="text-slate-600 dark:text-slate-400 font-medium mb-2 text-sm">{{ job.company }} | {{ job.location }}</div>
-                      <ul v-if="Array.isArray(job.description)" class="list-disc list-outside ml-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed space-y-1">
-                        <li v-for="(point, i) in job.description" :key="i">{{ point }}</li>
-                      </ul>
-                      <p v-else class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                        {{ job.description }}
-                      </p>
-                  </div>
+          <div class="bento-grid">
+            <article v-for="(project, index) in projects" :key="index" class="project-card reveal" :class="'reveal-delay-' + ((index % 3) + 1)">
+              <div class="project-image-wrap">
+                <img :src="project.image" :alt="project.title" loading="lazy">
+                <div class="project-image-overlay" @click="openImageModal(project.image)">
+                  <span class="btn btn-ghost" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff; font-size: 0.8125rem;">
+                    <span class="material-symbols-outlined" style="font-size:16px">zoom_in</span>
+                    View Image
+                  </span>
+                </div>
               </div>
-
-           </div>
-      </section>
-
-      <!-- Projects Grid -->
-      <section id="projects" class="w-full xl:max-w-[1280px] mx-auto px-4 md:px-10 py-16">
-        <div class="flex flex-col gap-2 mb-10 reveal">
-           <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white mb-2">Selected Works</h2>
-           <p class="text-slate-600 dark:text-slate-400">A showcase of mobile excellence.</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <article v-for="(project, index) in projects" :key="index" class="reveal group flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700/50 shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300">
-            <div class="relative aspect-video w-full overflow-hidden bg-slate-100 dark:bg-[#111318]">
-              <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" :style="{ backgroundImage: `url(${project.image})` }"></div>
-              <div @click="openImageModal(project.image)" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer z-10">
-                <span class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/20 hover:bg-white/20 transition-colors">View Full Image</span>
-              </div>
-            </div>
-            <div class="flex flex-col flex-1 p-5 md:p-6 gap-4">
-              <div class="flex flex-wrap gap-2">
-                <span v-for="tag in project.tags" :key="tag" class="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 text-xs font-semibold">{{ tag }}</span>
-              </div>
-              <div class="flex flex-col gap-2">
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ project.title }}</h3>
-                <p :class="['text-slate-600 dark:text-slate-400 text-sm leading-relaxed transition-all duration-300', expandedProjects.includes(index) ? '' : 'line-clamp-3']">
-                   {{ project.description }}
+              <div class="project-body">
+                <div style="display:flex; flex-wrap:wrap; gap: 0.375rem;">
+                  <span v-for="t in project.tags" :key="t" class="tag">{{ t }}</span>
+                </div>
+                <h3 style="color: var(--text-primary);">{{ project.title }}</h3>
+                <p :class="['project-desc', expandedProjects.includes(index) ? '' : 'line-clamp-3']" style="font-size: 0.875rem;">
+                  {{ project.description }}
                 </p>
-                <button 
-                  @click.stop="toggleExpand(index)" 
-                  class="text-primary text-sm font-medium mt-1 hover:underline focus:outline-none self-start flex items-center gap-1"
-                >
+                <button @click.stop="toggleExpand(index)" class="read-more-btn">
                   {{ expandedProjects.includes(index) ? 'Show Less' : 'Read More' }}
-                  <span class="material-symbols-outlined text-sm transition-transform duration-300" :class="{ 'rotate-180': expandedProjects.includes(index) }">expand_more</span>
+                  <span class="material-symbols-outlined" style="font-size:16px; transition: transform 0.3s;" :style="{ transform: expandedProjects.includes(index) ? 'rotate(180deg)' : '' }">expand_more</span>
                 </button>
               </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
       </section>
 
-      <!-- About Me / Contact Details Section -->
-      <section id="about" class="w-full xl:max-w-[1280px] mx-auto px-4 md:px-10 py-16">
-        <div class="grid gap-12 lg:grid-cols-2 items-center reveal">
-           <div class="flex flex-col gap-6">
-              <div class="flex flex-col gap-2">
-                 <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-tight text-slate-900 dark:text-white mb-2">About Me</h2>
-                 <div class="h-1 w-20 bg-primary rounded-full"></div>
+      <!-- ===== ABOUT ===== -->
+      <section id="about" class="section">
+        <div class="container">
+          <div class="about-grid reveal">
+            <div class="about-left">
+              <div class="section-header" style="margin-bottom: 1.5rem;">
+                <h2>About Me</h2>
+                <div class="accent-line"></div>
               </div>
-              <p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
-                As a passionate Flutter Developer, I specialize in building high-performance mobile applications. 
+              <p style="font-size: 1.0625rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                As a passionate Flutter Developer, I specialize in building high-performance mobile applications.
                 With a deep understanding of Clean Architecture and State Management, I create scalable and maintainable codebases.
                 I am always eager to learn new technologies and improve my skills.
               </p>
-              
-              <div class="flex flex-col gap-4 mt-4">
-                 <div class="flex items-center gap-4 group">
-                    <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary border border-slate-200 dark:border-slate-700 transition-colors group-hover:bg-primary group-hover:text-white">
-                       <span class="material-symbols-outlined">call</span>
-                    </div>
-                    <div>
-                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Phone</div>
-                       <a :href="'tel:' + contactDetails.phone" class="text-slate-900 dark:text-white font-medium hover:text-primary transition-colors">{{ contactDetails.phone }}</a>
-                    </div>
-                 </div>
-                 
-                 <div class="flex items-center gap-4 group">
-                    <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary border border-slate-200 dark:border-slate-700 transition-colors group-hover:bg-primary group-hover:text-white">
-                       <span class="material-symbols-outlined">mail</span>
-                    </div>
-                    <div>
-                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Email</div>
-                       <a :href="'mailto:' + contactDetails.email" class="text-slate-900 dark:text-white font-medium hover:text-primary transition-colors">{{ contactDetails.email }}</a>
-                    </div>
-                 </div>
 
-                 <div class="flex items-center gap-4 group">
-                    <div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary border border-slate-200 dark:border-slate-700 transition-colors group-hover:bg-primary group-hover:text-white">
-                       <span class="material-symbols-outlined">location_on</span>
-                    </div>
-                    <div>
-                       <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Location</div>
-                       <p class="text-slate-900 dark:text-white font-medium">{{ contactDetails.location }}</p>
-                    </div>
-                 </div>
-              </div>
-           </div>
 
-           <!-- Social Links or Additional Info -->
-           <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-slate-700/50 rounded-2xl p-8 shadow-lg">
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Connect with me</h3>
-              <div class="grid gap-4">
-                 <a v-for="social in contactDetails.social" :key="social.name" :href="social.link" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group">
-                    <div class="flex items-center gap-3">
-                       <span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors">{{ social.icon }}</span>
-                       <span class="font-medium text-slate-700 dark:text-slate-200">{{ social.name }}</span>
-                    </div>
-                    <span class="text-sm text-slate-500">{{ social.text }}</span>
-                 </a>
+
+              <!-- Contact Details -->
+              <div style="margin-top: 2rem;">
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <span class="material-symbols-outlined">call</span>
+                  </div>
+                  <div>
+                    <div class="contact-label">Phone</div>
+                    <a :href="'tel:' + contactDetails.phone" class="contact-value">{{ contactDetails.phone }}</a>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <span class="material-symbols-outlined">mail</span>
+                  </div>
+                  <div>
+                    <div class="contact-label">Email</div>
+                    <a :href="'mailto:' + contactDetails.email" class="contact-value">{{ contactDetails.email }}</a>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <span class="material-symbols-outlined">location_on</span>
+                  </div>
+                  <div>
+                    <div class="contact-label">Location</div>
+                    <span class="contact-value">{{ contactDetails.location }}</span>
+                  </div>
+                </div>
               </div>
-           </div>
+            </div>
+
+            <div class="about-right">
+              <div class="glass-card" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--text-primary);">Connect with me</h3>
+                <div style="display:flex; flex-direction:column; gap: 0.75rem;">
+                  <a v-for="social in contactDetails.social" :key="social.name" :href="social.link" target="_blank" class="social-card">
+                    <div style="display:flex; align-items:center; gap: 0.75rem;">
+                      <span class="material-symbols-outlined" style="color: var(--text-muted); font-size:20px;">{{ social.icon }}</span>
+                      <span style="font-weight: 500;">{{ social.name }}</span>
+                    </div>
+                    <span style="font-size: 0.8125rem; color: var(--text-muted);">{{ social.text }}</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- Footer -->
-      <footer id="contact" class="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-background-dark py-10 transition-colors duration-300">
-        <div class="max-w-[1280px] mx-auto px-4 md:px-10 flex flex-col md:flex-row items-center justify-between gap-6 reveal">
-          <div class="flex flex-col gap-2 text-center md:text-left">
-            <p class="text-slate-900 dark:text-white text-lg font-bold">{{ name }}</p>
-            <p class="text-slate-600 dark:text-slate-400 text-sm">Crafting exceptional mobile experiences.</p>
-          </div>
-          <div class="flex items-center gap-6">
-            <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors" href="mailto:stibinaugustine3047@gmail.com">
-               <span class="flex items-center gap-2">
-                   <span class="material-symbols-outlined">mail</span>
-                   <span class="text-sm">Contact Me</span>
-               </span>
+      <!-- ===== FOOTER ===== -->
+      <footer id="contact">
+        <div class="gradient-divider"></div>
+        <div class="footer">
+          <div class="footer-inner">
+            <div>
+              <p style="font-size: 1.125rem; font-weight: 700; font-family: var(--font-heading); color: var(--text-primary);">{{ name }}</p>
+              <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">Crafting exceptional mobile experiences.</p>
+            </div>
+            <a href="mailto:stibinaugustine3047@gmail.com" class="btn btn-ghost" style="font-size:0.8125rem;">
+              <span class="material-symbols-outlined" style="font-size:18px">mail</span>
+              Contact Me
             </a>
           </div>
-        </div>
-        <div class="max-w-[1280px] mx-auto px-4 md:px-10 mt-8 pt-8 border-t border-slate-200 dark:border-slate-800 text-center md:text-left">
-          <p class="text-slate-500 text-sm">© 2026 {{ name }}. All rights reserved.</p>
+          <div style="max-width:1200px; margin:0 auto; padding: 2rem 1.5rem 0; border-top: 1px solid var(--border-subtle); text-align:center; margin-top: 2rem;">
+            <p style="font-size: 0.8125rem; color: var(--text-muted);">© 2026 {{ name }}. All rights reserved.</p>
+          </div>
         </div>
       </footer>
-
     </main>
 
-    <!-- Image Modal -->
-    <div v-if="selectedImage" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10 transition-all duration-300" @click="closeImageModal">
-      <div class="relative w-full max-w-5xl h-full max-h-[90vh] flex items-center justify-center">
-        <button @click="closeImageModal" class="absolute -top-12 right-0 text-white hover:text-primary transition-colors">
-          <span class="material-symbols-outlined text-4xl">close</span>
+    <!-- ===== IMAGE MODAL ===== -->
+    <div v-if="selectedImage" class="modal-backdrop" @click="closeImageModal">
+      <div class="modal-content">
+        <button class="modal-close" @click="closeImageModal">
+          <span class="material-symbols-outlined">close</span>
         </button>
-        <img :src="selectedImage" alt="Project Preview" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl" @click.stop />
+        <img :src="selectedImage" alt="Project Preview" @click.stop>
       </div>
     </div>
   </div>
 </template>
 
-<style>
-/* Utilities if needed */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s ease-out;
+<style scoped>
+/* ===== Component-level styles ===== */
+.portfolio-root {
+  min-height: 100vh;
+  position: relative;
 }
 
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
+/* Hero */
+.hero-section {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 3rem 0 2rem;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+  }
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Mobile header: avatar + heading together */
+.hero-mobile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.hero-mobile-avatar {
+  flex-shrink: 0;
+}
+
+.hero-desktop-badge {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hero-mobile-header { display: none; }
+  .hero-desktop-badge { display: block; }
+}
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.hero-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+}
+
+.hero-skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Hero Image (Desktop) */
+.hero-image {
+  display: none;
+  justify-content: flex-end;
+}
+
+@media (min-width: 1024px) {
+  .hero-image { display: flex; }
+}
+
+.hero-image .profile-card {
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 440px;
+  transition: transform 0.1s ease-out;
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
+}
+
+/* Timeline */
+.timeline-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.timeline-points {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.timeline-points li {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Read More */
+.read-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent-violet);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  margin-top: 0.25rem;
+}
+
+.read-more-btn:hover {
+  color: var(--accent-cyan);
+}
+
+/* About Grid */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.about-left {
+  min-width: 0;
+}
+
+.about-right {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .about-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4rem;
+  }
+}
+
+/* Stats Row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stats-row .glass-card:hover {
+  transform: translateY(-4px);
 }
 </style>
