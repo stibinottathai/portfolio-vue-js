@@ -220,10 +220,15 @@ onUnmounted(() => { if (authUnsub) authUnsub() })
       <main class="admin-main">
         <!-- Mobile topbar -->
         <div class="mobile-topbar">
-          <button class="icon-btn-bare" @click="isSidebarOpen=true">
-            <span class="material-symbols-outlined">menu</span>
+          <div style="display:flex; align-items:center; gap: 0.75rem;">
+            <button class="icon-btn-bare" @click="isSidebarOpen=true">
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+            <span class="mobile-section-title">{{ navItems.find(n=>n.id===activeSection)?.label }}</span>
+          </div>
+          <button class="icon-btn-bare" style="color: #ef4444;" @click="logout" title="Sign Out">
+            <span class="material-symbols-outlined">logout</span>
           </button>
-          <span class="mobile-section-title">{{ navItems.find(n=>n.id===activeSection)?.label }}</span>
         </div>
 
         <AdminMessages  v-if="activeSection==='messages'" />
@@ -262,7 +267,7 @@ onUnmounted(() => { if (authUnsub) authUnsub() })
   width:240px;min-width:240px;background:var(--bg-secondary);
   border-right:1px solid var(--border-subtle);
   display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
+  position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;
 }
 .sidebar-logo { display:flex;align-items:center;gap:0.6rem;padding:1.25rem 1rem;font-weight:700;font-size:0.9rem;color:var(--text-primary);font-family:var(--font-heading);border-bottom:1px solid var(--border-subtle); }
 .sidebar-logo .material-symbols-outlined { font-size:20px;color:var(--accent-violet); }
@@ -284,7 +289,7 @@ onUnmounted(() => { if (authUnsub) authUnsub() })
 .admin-main { flex:1;overflow-y:auto;min-width:0; }
 
 /* Mobile topbar */
-.mobile-topbar { display:none;align-items:center;gap:0.75rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border-subtle);background:var(--bg-secondary); }
+.mobile-topbar { display:none;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border-subtle);background:var(--bg-secondary); }
 .mobile-section-title { font-weight:600;font-size:1rem;color:var(--text-primary); }
 .icon-btn-bare { background:none;border:none;cursor:pointer;color:var(--text-primary);display:flex;align-items:center; }
 .icon-btn-bare .material-symbols-outlined { font-size:24px; }
@@ -295,7 +300,7 @@ onUnmounted(() => { if (authUnsub) authUnsub() })
 /* Mobile responsive */
 @media(max-width:768px) {
   .admin-sidebar {
-    position:fixed;left:-260px;top:0;z-index:200;height:100vh;
+    position:fixed;left:-260px;top:0;z-index:200;height:100vh;height:100dvh;
     width:240px;transition:left 0.3s cubic-bezier(0.4,0,0.2,1);
   }
   .admin-sidebar.sidebar--open { left:0; }
