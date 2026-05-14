@@ -479,7 +479,7 @@ const closeImageModal = () => {
       </section>
 
       <!-- ===== CONTACT SECTION ===== -->
-      <ContactSection />
+      <ContactSection :contactDetails="contactDetails" />
 
       <!-- ===== FOOTER ===== -->
       <footer>

@@ -3,6 +3,22 @@ import { ref } from 'vue'
 import { db } from '../firebase'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 
+const props = defineProps({
+  contactDetails: {
+    type: Object,
+    required: false,
+    default: () => ({
+      email: 'stibinaugustine3047@gmail.com',
+      phone: '+971 58 308 1024',
+      location: 'Bur Dubai, Dubai, UAE',
+      social: [
+        { name:'GitHub', icon:'code', link: 'https://github.com/stibinottathai' },
+        { name:'LinkedIn', icon:'work', link: 'https://in.linkedin.com/in/stibin-augustine-8075b1197' }
+      ]
+    })
+  }
+})
+
 const name = ref('')
 const email = ref('')
 const message = ref('')
@@ -72,8 +88,8 @@ const handleSubmit = async () => {
               </div>
               <div>
                 <div class="contact-info-label">Email</div>
-                <a href="mailto:stibinaugustine3047@gmail.com" class="contact-info-value">
-                  stibinaugustine3047@gmail.com
+                <a :href="'mailto:' + contactDetails.email" class="contact-info-value">
+                  {{ contactDetails.email }}
                 </a>
               </div>
             </div>
@@ -84,7 +100,7 @@ const handleSubmit = async () => {
               </div>
               <div>
                 <div class="contact-info-label">Phone</div>
-                <a href="tel:+971583081024" class="contact-info-value">+971 58 308 1024</a>
+                <a :href="'tel:' + contactDetails.phone.replace(/\\s+/g, '')" class="contact-info-value">{{ contactDetails.phone }}</a>
               </div>
             </div>
 
@@ -94,7 +110,7 @@ const handleSubmit = async () => {
               </div>
               <div>
                 <div class="contact-info-label">Location</div>
-                <span class="contact-info-value">Bur Dubai, Dubai, UAE</span>
+                <span class="contact-info-value">{{ contactDetails.location }}</span>
               </div>
             </div>
 
@@ -109,13 +125,9 @@ const handleSubmit = async () => {
             </div>
 
             <div class="contact-socials">
-              <a href="https://github.com/stibinottathai" target="_blank" class="contact-social-btn">
-                <span class="material-symbols-outlined">code</span>
-                GitHub
-              </a>
-              <a href="https://in.linkedin.com/in/stibin-augustine-8075b1197" target="_blank" class="contact-social-btn">
-                <span class="material-symbols-outlined">work</span>
-                LinkedIn
+              <a v-for="link in contactDetails.social" :key="link.name" :href="link.link" target="_blank" class="contact-social-btn">
+                <span class="material-symbols-outlined">{{ link.icon }}</span>
+                {{ link.name }}
               </a>
             </div>
           </div>
