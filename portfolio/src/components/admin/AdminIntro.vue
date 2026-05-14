@@ -13,7 +13,8 @@ const form = ref({
   summary: 'Flutter Developer with 4+ years of experience and strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management.',
   badgeText: 'Available for new projects',
   available: true,
-  profileImageUrl: ''
+  profileImageUrl: '',
+  resumeUrl: ''
 })
 
 onMounted(async () => {
@@ -81,6 +82,14 @@ const save = async () => {
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Live Preview:</p>
           <img :src="form.profileImageUrl" alt="Profile Preview" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid var(--accent-violet); box-shadow: var(--shadow-glow);" @error="form.profileImageUrl = ''" />
         </div>
+      </div>
+
+      <div class="section-divider">Resume</div>
+      
+      <div class="form-group">
+        <label>Google Drive Resume Link</label>
+        <input v-model="form.resumeUrl" type="url" placeholder="https://drive.google.com/file/d/.../view" />
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Paste the "Share" link from Google Drive here.</p>
       </div>
 
       <div class="form-actions">

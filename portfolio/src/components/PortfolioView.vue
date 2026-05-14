@@ -13,7 +13,8 @@ const DEF_INTRO = {
   typingText: 'Flutter Developer.',
   summary: 'Flutter Developer with 4+ years of experience and strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management.',
   badgeText: 'Available for new projects',
-  available: true
+  available: true,
+  resumeUrl: 'https://drive.google.com/file/d/1riw-nzBdyMfbCXW4ShIpb_XRhaZFYJE7/view?usp=sharing'
 }
 const DEF_SKILLS = ['Flutter','Dart','Firebase','REST API','State Management','Clean Architecture','Git','Riverpod','Bloc','Provider','UI/UX Implementation']
 const DEF_EXPERIENCE = [
@@ -45,6 +46,7 @@ const skills = ref(DEF_SKILLS)
 const experience = ref(DEF_EXPERIENCE)
 const projects = ref(DEF_PROJECTS)
 const contactDetails = ref(DEF_CONTACT)
+const resumeUrl = ref(DEF_INTRO.resumeUrl)
 
 // ── Firestore loader ───────────────────────────────────────────────────────────
 const loadPortfolioData = async () => {
@@ -65,6 +67,7 @@ const loadPortfolioData = async () => {
         isAvailable.value = d.intro.available !== undefined ? d.intro.available : true
         typingTextSource.value = d.intro.typingText || DEF_INTRO.typingText
         profileImage.value = d.intro.profileImageUrl || '/profile.png'
+        resumeUrl.value = d.intro.resumeUrl || DEF_INTRO.resumeUrl
       }
       if (d.skills?.length) skills.value = d.skills
       if (d.about) {
@@ -218,13 +221,16 @@ const closeImageModal = () => {
           <button @click="router.push('/admin')" class="theme-toggle-btn" title="Admin">
             <span class="material-symbols-outlined" style="font-size:20px">lock</span>
           </button>
-          <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8125rem;">
+          <a :href="resumeUrl" target="_blank" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8125rem;">
             <span class="material-symbols-outlined" style="font-size:16px">download</span>
             Resume
           </a>
         </div>
 
         <div class="nav-mobile-controls">
+          <button @click="router.push('/admin')" class="theme-toggle-btn" title="Admin">
+            <span class="material-symbols-outlined" style="font-size:20px">lock</span>
+          </button>
           <button @click="toggleTheme" class="theme-toggle-btn">
             <span class="material-symbols-outlined" style="font-size:20px">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
           </button>
@@ -241,7 +247,7 @@ const closeImageModal = () => {
         <a class="nav-mobile-link" @click.prevent="scrollToSection('projects')" href="#projects">Projects</a>
         <a class="nav-mobile-link" @click.prevent="scrollToSection('about')" href="#about">About</a>
         <a class="nav-mobile-link" @click.prevent="scrollToSection('contact')" href="#contact">Contact</a>
-        <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="btn btn-primary" style="width:100%; margin-top: 0.5rem;">
+        <a :href="resumeUrl" target="_blank" class="btn btn-primary" style="width:100%; margin-top: 0.5rem;">
           <span class="material-symbols-outlined" style="font-size:16px">download</span>
           Resume
         </a>
@@ -292,7 +298,7 @@ const closeImageModal = () => {
                 View Projects
                 <span class="material-symbols-outlined" style="font-size:18px">arrow_forward</span>
               </button>
-              <button @click="scrollToSection('contact')" class="btn btn-ghost btn-lg">
+              <button @click="scrollToSection('contact')" class="btn btn-animated btn-lg">
                 Get in Touch
               </button>
             </div>

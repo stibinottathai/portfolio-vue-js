@@ -204,6 +204,48 @@ p { color: var(--text-secondary); }
 .btn-ghost:hover {
   border-color: var(--accent-violet);
   background: rgba(139, 92, 246, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ---------- Animated Shimmer Button ---------- */
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+  background: rgba(139, 92, 246, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
+}
+
+.btn-animated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: btn-shimmer 3s infinite;
+}
+
+@keyframes btn-shimmer {
+  0% { left: -100%; }
+  25% { left: 200%; }
+  100% { left: 200%; }
+}
+
+.btn-animated:hover {
+  border-color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(6, 182, 212, 0.2);
 }
 
 .btn-lg {
