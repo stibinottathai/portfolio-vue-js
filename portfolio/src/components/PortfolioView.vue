@@ -1,182 +1,144 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import ContactSection from './ContactSection.vue'
+import { db } from '../firebase'
+import { doc, getDoc, getDocs, collection, query, orderBy } from 'firebase/firestore'
 
-// Theme
+const router = useRouter()
+
+// ── Defaults (shown before/if Firestore has no data) ──────────────────────────
+const DEF_INTRO = {
+  name: 'Stibin Augustine',
+  typingText: 'Flutter Developer.',
+  summary: 'Flutter Developer with 4+ years of experience and strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management.',
+  badgeText: 'Available for new projects',
+  available: true
+}
+const DEF_SKILLS = ['Flutter','Dart','Firebase','REST API','State Management','Clean Architecture','Git','Riverpod','Bloc','Provider','UI/UX Implementation']
+const DEF_EXPERIENCE = [
+  { company:'App Station', role:'Flutter Developer', period:'09/2024 - 02/2026', location:'Trivandrum, India', description:['Developed Khadoom, a cross-platform Flutter Mobile & Web application for the Qatar Olympic Committee','Implemented Clean Architecture for scalability and maintainability','Used Riverpod for efficient and predictable state management','Built responsive and reusable UI components optimized for Flutter Web','Integrated REST APIs and managed data flow across layers','Implemented features such as leave requests, approvals, and internal workflow management'] },
+  { company:'Active Lobby', role:'Flutter Developer', period:'10/2022 - 09/2024', location:'Kochi', description:['Developed LM Pay, a Flutter Web & Mobile money exchange application','Enabled international remittance from UAE to multiple countries with multi-currency support','Implemented MVVM architecture for clean separation of UI, business logic, and data layers','Used Provider for efficient state management','Built responsive, reusable UI components for web and mobile','Integrated REST APIs for transactions, exchange rates, and user operations','Focused on performance, security, and scalable code practices'] },
+  { company:'Tazy Solution', role:'Flutter Developer', period:'01/2022 - 10/2022', location:'Kannur, India', description:['Developed an internal Flutter mobile application for blood donation management','Implemented donor registration, blood group filtering, and request workflows','Used Firebase (Authentication, Firestore/Realtime DB, Notifications)','Applied Provider for efficient state management','Built clean, responsive, and reusable UI components','Ensured secure and reliable data handling for internal organizational use'] }
+]
+const DEF_PROJECTS = [
+  { title:'QuickReceipt', tags:['Flutter','Dart','Bloc','Firebase'], description:'QuickReceipt is an all-in-one billing and business management app designed to simplify your daily operations. Instantly generate and print bills using a Bluetooth printer, while seamlessly managing your inventory, suppliers, and customers in one place.', image:'/quick_receipt.jpg', detailsLink:'#', sourceLink:'#' },
+  { title:'Shop Ledger', tags:['Flutter','Dart','Riverpod','Supabase'], description:'Shop Ledger is a modern mobile application designed to simplify and digitize daily shop operations. It helps shop owners efficiently manage sales, purchases, expenses, credits, debits, customers, suppliers, and stock, all in one place.', image:'/shop_ledger.png', detailsLink:'#', sourceLink:'#' },
+  { title:'Dately', tags:['Flutter','Dart','Supabase','Real-time Chat'], description:'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication, swipe-based discovery, global search, real-time chat with text/image/audio support, and editable profiles.', image:'/dately.png', detailsLink:'#', sourceLink:'#' },
+  { title:'Spendly', tags:['Flutter','Dart','Firebase','Riverpod'], description:'Spendly is a smart expense tracker that helps you easily monitor your daily spending with clear and detailed statistics. It allows you to track expenses over time and manage your finances more effectively with monthly and yearly insights.', image:'/spendly.png', detailsLink:'#', sourceLink:'#' },
+  { title:'Luckey Spinner', tags:['Flutter','Dart','SqfLite','Riverpod'], description:"Lucky Spinner lets you add names, spin the wheel, and instantly pick a random winner. It's perfect for games, quick decisions, giveaways, and fun group activities.", image:'/luckey_spinner.png', detailsLink:'#', sourceLink:'#' },
+  { title:'Flow Tracker', tags:['Flutter','Dart','SqfLite','Riverpod'], description:'Flow Tracker is a period tracking app that helps women monitor their monthly cycle, predict upcoming periods and ovulation days, and receive timely reminders to stay prepared and informed.', image:'/flow_track.png', detailsLink:'#', sourceLink:'#' },
+  { title:'Time Tracker', tags:['Flutter','Dart','Sqflite'], description:'Time is a minimal and user-friendly mobile application designed to help individuals track their daily office working hours with precision. The app focuses on simplicity, clarity, and real-time feedback.', image:'/Time_Tracker.png', detailsLink:'#', sourceLink:'#' }
+]
+const DEF_ABOUT = { content:'As a passionate Flutter Developer, I specialize in building high-performance mobile applications. With a deep understanding of Clean Architecture and State Management, I create scalable and maintainable codebases. I am always eager to learn new technologies and improve my skills.' }
+const DEF_CONTACT = { email:'stibinaugustine3047@gmail.com', phone:'+971 58 308 1024', location:'Bur Dubai, Dubai, UAE', social:[{name:'GitHub',icon:'code',link:'https://github.com/stibinottathai',text:'github.com/stibin'},{name:'LinkedIn',icon:'work',link:'https://in.linkedin.com/in/stibin-augustine-8075b1197',text:'linkedin.com/in/stibin'}] }
+
+// ── Reactive state (starts with defaults) ──────────────────────────────────────
+const name = ref(DEF_INTRO.name)
+const summary = ref(DEF_INTRO.summary)
+const badgeText = ref(DEF_INTRO.badgeText)
+const isAvailable = ref(DEF_INTRO.available)
+const typingTextSource = ref(DEF_INTRO.typingText)
+const aboutContent = ref(DEF_ABOUT.content)
+const skills = ref(DEF_SKILLS)
+const experience = ref(DEF_EXPERIENCE)
+const projects = ref(DEF_PROJECTS)
+const contactDetails = ref(DEF_CONTACT)
+
+// ── Firestore loader ───────────────────────────────────────────────────────────
+const loadPortfolioData = async () => {
+  try {
+    // Config (intro, about, skills)
+    const configSnap = await getDoc(doc(db, 'portfolio', 'config'))
+    if (configSnap.exists()) {
+      const d = configSnap.data()
+      if (d.intro) {
+        name.value = d.intro.name || DEF_INTRO.name
+        summary.value = d.intro.summary || DEF_INTRO.summary
+        badgeText.value = d.intro.badgeText || DEF_INTRO.badgeText
+        isAvailable.value = d.intro.available !== undefined ? d.intro.available : true
+        typingTextSource.value = d.intro.typingText || DEF_INTRO.typingText
+      }
+      if (d.skills?.length) skills.value = d.skills
+      if (d.about) {
+        aboutContent.value = d.about.content || DEF_ABOUT.content
+        contactDetails.value = {
+          email: d.about.email || DEF_CONTACT.email,
+          phone: d.about.phone || DEF_CONTACT.phone,
+          location: d.about.location || DEF_CONTACT.location,
+          social: [
+            { name:'GitHub', icon:'code', link: d.about.github || DEF_CONTACT.social[0].link, text:'github.com/stibin' },
+            { name:'LinkedIn', icon:'work', link: d.about.linkedin || DEF_CONTACT.social[1].link, text:'linkedin.com/in/stibin' }
+          ]
+        }
+      }
+    }
+    // Experiences
+    const expSnap = await getDocs(query(collection(db, 'experiences'), orderBy('order','asc')))
+    if (!expSnap.empty) experience.value = expSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+    // Projects
+    const projSnap = await getDocs(query(collection(db, 'projects'), orderBy('order','asc')))
+    if (!projSnap.empty) projects.value = projSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+  } catch (e) {
+    console.warn('Firestore load failed, using defaults:', e)
+  }
+}
+
+// ── Theme ──────────────────────────────────────────────────────────────────────
 const isDark = ref(true)
-
 const toggleTheme = () => {
   isDark.value = !isDark.value
   document.documentElement.classList.toggle('light', !isDark.value)
   localStorage.theme = isDark.value ? 'dark' : 'light'
 }
 
-// Interactive Animations
+// ── Mouse parallax ─────────────────────────────────────────────────────────────
 const mouseX = ref(0)
 const mouseY = ref(0)
-
 const handleMouseMove = (event) => {
   mouseX.value = (event.clientX / window.innerWidth) - 0.5
   mouseY.value = (event.clientY / window.innerHeight) - 0.5
 }
 
+// ── Typing effect ──────────────────────────────────────────────────────────────
 const typingText = ref('')
-const textToType = 'Flutter Developer.'
 const isTyping = ref(true)
 let charIndex = 0
 
 const typeEffect = () => {
-  if (charIndex <= textToType.length) {
-    typingText.value = textToType.substring(0, charIndex)
-    charIndex++
-    setTimeout(typeEffect, 80)
-  } else {
-    isTyping.value = false
+  charIndex = 0
+  isTyping.value = true
+  typingText.value = ''
+  const tick = () => {
+    const src = typingTextSource.value
+    if (charIndex <= src.length) {
+      typingText.value = src.substring(0, charIndex)
+      charIndex++
+      setTimeout(tick, 80)
+    } else {
+      isTyping.value = false
+    }
   }
+  tick()
 }
-
-const name = "Stibin Augustine"
-const summary = "Flutter Developer with 4+ years of experience and strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management."
-
-const skills = ref([
-  'Flutter', 'Dart', 'Firebase', 'REST API', 'State Management',
-  'Clean Architecture', 'Git', 'Riverpod', 'Bloc', 'Provider', 'UI/UX Implementation'
-])
-
-const experience = ref([
-  {
-    company: 'App Station',
-    role: 'Flutter Developer',
-    period: '09/2024 - 02/2026',
-    description: [
-      'Developed Khadoom, a cross-platform Flutter Mobile & Web application for the Qutar Olympic Committee',
-      'Implemented Clean Architecture for scalability and maintainability',
-      'Used Riverpod for efficient and predictable state management',
-      'Built responsive and reusable UI components optimized for Flutter Web',
-      'Integrated REST APIs and managed data flow across layers',
-      'Implemented features such as leave requests, approvals, and internal workflow management'
-    ],
-    location: 'Trivandrum, India'
-  },
-  {
-    company: 'Active Lobby',
-    role: 'Flutter Developer',
-    period: '10/2022 - 09/2024',
-    description: [
-      'Developed LM Pay, a Flutter Web & Mobile money exchange application',
-      'Enabled international remittance from UAE to multiple countries with multi-currency support',
-      'Implemented MVVM architecture for clean separation of UI, business logic, and data layers',
-      'Used Provider for efficient state management',
-      'Built responsive, reusable UI components for web and mobile',
-      'Integrated REST APIs for transactions, exchange rates, and user operations',
-      'Focused on performance, security, and scalable code practices'
-    ],
-    location: 'Kochi'
-  },
-  {
-    company: 'Tazy Solution',
-    role: 'Flutter Developer',
-    period: '01/2022 - 10/2022',
-    description: [
-      'Developed an internal Flutter mobile application for blood donation management',
-      'Implemented donor registration, blood group filtering, and request workflows',
-      'Used Firebase (Authentication, Firestore/Realtime DB, Notifications)',
-      'Applied Provider for efficient state management',
-      'Built clean, responsive, and reusable UI components',
-      'Ensured secure and reliable data handling for internal organizational use'
-    ],
-    location: 'Kannur, India'
-  }
-])
-
-const projects = ref([
-  {
-    title: 'QuickReceipt',
-    tags: ['Flutter', 'Dart', 'Bloc', 'Firebase'],
-    description: 'QuickReceipt is an all-in-one billing and business management app designed to simplify your daily operations. Instantly generate and print bills using a Bluetooth printer, while seamlessly managing your inventory, suppliers, and customers in one place. With powerful insights, organized records, and smart tracking, QuickReceipt helps you run your shop efficiently and make better business decisions—faster and easier than ever.',
-    image: '/quick_receipt.jpg',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
-  {
-    title: 'Shop Ledger',
-    tags: ['Flutter', 'Dart', 'Riverpod', 'Supabase'],
-    description: 'Shop Ledger is a modern mobile application designed to simplify and digitize daily shop operations. It helps shop owners efficiently manage sales, purchases, expenses, credits, debits, customers, suppliers, and stock, all in one place.',
-    image: '/shop_ledger.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
-  {
-    title: 'Dately',
-    tags: ['Flutter', 'Dart', 'Supabase', 'Real-time Chat'],
-    description: 'Dately is a Flutter-based dating app that enables users to discover, match and chat with compatible profiles. It includes email authentication with password reset, swipe-based discovery, global search, real-time chat with text/image/audio support, editable profiles with up to 6 photos, and the ability to retract requests, unmatch, hide profiles from discovery, and delete accounts.',
-    image: '/dately.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
-  {
-    title: 'Spendly',
-    tags: ['Flutter', 'Dart', 'Firebase', 'Riverpod'],
-    description: 'Spendly is a smart expense tracker that helps you easily monitor your daily spending with clear and detailed statistics. It allows you to track expenses over time, understand your spending habits, and manage your finances more effectively with monthly and yearly insights.',
-    image: '/spendly.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
-  {
-    title: 'Luckey Spinner',
-    tags: ['Flutter', 'Dart', 'SqfLite', 'Riverpod'],
-    description: 'Lucky Spinner lets you add names, spin the wheel, and instantly pick a random winner. It\'s perfect for games, quick decisions, giveaways, and fun group activities.',
-    image: '/luckey_spinner.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
-  {
-    title: 'Flow Tracker',
-    tags: ['Flutter', 'Dart', 'SqfLite', 'Riverpod'],
-    description: 'Flow Tracker is a period tracking app that helps women monitor their monthly cycle, predict upcoming periods and ovulation days, and receive timely reminders to stay prepared and informed.',
-    image: '/flow_track.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  },
-  {
-    title: 'Time Tracker',
-    tags: ['Flutter', 'Dart', 'Sqflite'],
-    description: 'Time is a minimal and user-friendly mobile application designed to help individuals track their daily office working hours with precision. The app focuses on simplicity, clarity, and real-time feedback.',
-    image: '/Time_Tracker.png',
-    detailsLink: '#',
-    sourceLink: '#'
-  }
-])
-
-const contactDetails = ref({
-  email: 'stibinaugustine3047@gmail.com',
-  phone: '+971 58 308 1024',
-  location: 'Bur Dubai, Dubai, UAE',
-  social: [
-    { name: 'GitHub', icon: 'code', link: 'https://github.com/stibinottathai', text: 'github.com/stibin' },
-    { name: 'LinkedIn', icon: 'work', link: 'https://in.linkedin.com/in/stibin-augustine-8075b1197', text: 'linkedin.com/in/stibin' },
-  ]
-})
 
 const isMenuOpen = ref(false)
 
-onMounted(() => {
-  // Restore saved theme
+onMounted(async () => {
   if (localStorage.theme === 'light') {
     isDark.value = false
     document.documentElement.classList.add('light')
   }
 
+  // Load Firestore data first, then start typing effect with correct text
+  await loadPortfolioData()
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active')
-      }
+      if (entry.isIntersecting) entry.target.classList.add('active')
     })
   }, { threshold: 0.1 })
-
-  document.querySelectorAll('.reveal').forEach((el) => {
-    observer.observe(el)
-  })
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
 
   typeEffect()
   window.addEventListener('mousemove', handleMouseMove)
@@ -189,9 +151,7 @@ onUnmounted(() => {
 const scrollToSection = (id) => {
   isMenuOpen.value = false
   const element = document.getElementById(id)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
-  }
+  if (element) element.scrollIntoView({ behavior: 'smooth' })
 }
 
 const expandedProjects = ref([])
@@ -241,6 +201,9 @@ const closeImageModal = () => {
           <button @click="toggleTheme" class="theme-toggle-btn" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
             <span class="material-symbols-outlined" style="font-size:20px">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
           </button>
+          <button @click="router.push('/admin')" class="theme-toggle-btn" title="Admin">
+            <span class="material-symbols-outlined" style="font-size:20px">lock</span>
+          </button>
           <a href="/stibin_cv.pdf" download="Stibin_Augustine_Resume.pdf" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.8125rem;">
             <span class="material-symbols-outlined" style="font-size:16px">download</span>
             Resume
@@ -287,25 +250,25 @@ const closeImageModal = () => {
             <div class="hero-mobile-header">
               <div class="hero-mobile-avatar">
                 <div class="profile-ring">
-                  <img src="/profile.png" alt="Stibin Augustine" width="80" height="80" style="width:80px;height:80px;object-fit:cover;">
+                  <img src="/profile.png" :alt="name" width="80" height="80" style="width:80px;height:80px;object-fit:cover;">
                 </div>
               </div>
               <div>
-                <div class="badge" style="margin-bottom: 0.75rem;">
+                <div class="badge" v-if="isAvailable" style="margin-bottom: 0.75rem;">
                   <span class="pulse-dot"></span>
-                  Available for new projects
+                  {{ badgeText }}
                 </div>
-                <h1>Hi, I'm Stibin.<br><span class="text-gradient">{{ typingText }}</span><span v-show="isTyping" class="typing-cursor"></span></h1>
+                <h1>Hi, I'm {{ name.split(' ')[0] }}.<br><span class="text-gradient">{{ typingText }}</span><span v-show="isTyping" class="typing-cursor"></span></h1>
               </div>
             </div>
 
-            <!-- Desktop badge (hidden on mobile since it's in header above) -->
+            <!-- Desktop badge -->
             <div class="hero-desktop-badge">
-              <div class="badge" style="margin-bottom: 0.5rem;">
+              <div class="badge" v-if="isAvailable" style="margin-bottom: 0.5rem;">
                 <span class="pulse-dot"></span>
-                Available for new projects
+                {{ badgeText }}
               </div>
-              <h1>Hi, I'm Stibin.<br><span class="text-gradient">{{ typingText }}</span><span v-show="isTyping" class="typing-cursor"></span></h1>
+              <h1>Hi, I'm {{ name.split(' ')[0] }}.<br><span class="text-gradient">{{ typingText }}</span><span v-show="isTyping" class="typing-cursor"></span></h1>
             </div>
 
             <p style="font-size: 1.125rem; max-width: 520px; line-height: 1.75;">{{ summary }}</p>
@@ -414,9 +377,7 @@ const closeImageModal = () => {
                 <div class="accent-line"></div>
               </div>
               <p style="font-size: 1.0625rem; line-height: 1.8; margin-bottom: 1.5rem;">
-                As a passionate Flutter Developer, I specialize in building high-performance mobile applications.
-                With a deep understanding of Clean Architecture and State Management, I create scalable and maintainable codebases.
-                I am always eager to learn new technologies and improve my skills.
+                {{ aboutContent }}
               </p>
 
 
@@ -471,8 +432,11 @@ const closeImageModal = () => {
         </div>
       </section>
 
+      <!-- ===== CONTACT SECTION ===== -->
+      <ContactSection />
+
       <!-- ===== FOOTER ===== -->
-      <footer id="contact">
+      <footer>
         <div class="gradient-divider"></div>
         <div class="footer">
           <div class="footer-inner">
@@ -480,10 +444,10 @@ const closeImageModal = () => {
               <p style="font-size: 1.125rem; font-weight: 700; font-family: var(--font-heading); color: var(--text-primary);">{{ name }}</p>
               <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">Crafting exceptional mobile experiences.</p>
             </div>
-            <a href="mailto:stibinaugustine3047@gmail.com" class="btn btn-ghost" style="font-size:0.8125rem;">
-              <span class="material-symbols-outlined" style="font-size:18px">mail</span>
-              Contact Me
-            </a>
+            <button @click="scrollToSection('contact')" class="btn btn-ghost" style="font-size:0.8125rem;">
+              <span class="material-symbols-outlined" style="font-size:18px">arrow_upward</span>
+              Back to Top
+            </button>
           </div>
           <div style="max-width:1200px; margin:0 auto; padding: 2rem 1.5rem 0; border-top: 1px solid var(--border-subtle); text-align:center; margin-top: 2rem;">
             <p style="font-size: 0.8125rem; color: var(--text-muted);">© 2026 {{ name }}. All rights reserved.</p>
