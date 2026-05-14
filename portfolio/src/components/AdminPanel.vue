@@ -44,7 +44,7 @@ const login = async () => {
   } catch (e) {
     console.error(e)
     if (e.code === 'auth/unauthorized-domain') {
-      loginError.value = 'Unauthorized domain. Please access the site via http://localhost:5173 exactly, or add 127.0.0.1 to your Firebase Auth Authorized Domains.'
+      loginError.value = `Unauthorized domain. You must add "${window.location.hostname}" to the Authorized Domains list in your Firebase Authentication settings.`
     } else {
       loginError.value = 'Login failed: ' + e.message
     }
