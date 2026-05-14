@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import ContactSection from './ContactSection.vue'
 import { db } from '../firebase'
-import { doc, getDoc, getDocs, collection, query, orderBy } from 'firebase/firestore'
+import { doc, onSnapshot, collection, query } from 'firebase/firestore'
 
 const router = useRouter()
 
@@ -48,18 +48,28 @@ const projects = ref(DEF_PROJECTS)
 const contactDetails = ref(DEF_CONTACT)
 const resumeUrl = ref(DEF_INTRO.resumeUrl)
 
-// ── Firestore loader ───────────────────────────────────────────────────────────
-const loadPortfolioData = async () => {
-  try {
-    const [configSnap, expSnap, projSnap] = await Promise.all([
-      getDoc(doc(db, 'portfolio', 'config')),
-      getDocs(query(collection(db, 'experiences'), orderBy('order','asc'))),
-      getDocs(query(collection(db, 'projects'), orderBy('order','asc')))
-    ])
+let observer = null
 
-    // Config (intro, about, skills)
-    if (configSnap.exists()) {
-      const d = configSnap.data()
+const setupReveal = () => {
+  if (!observer) return
+  nextTick(() => {
+    document.querySelectorAll('.reveal:not([data-observed="true"])').forEach((el) => {
+      el.dataset.observed = "true"
+      observer.observe(el)
+    })
+  })
+}
+
+watch([skills, experience, projects], () => {
+  setupReveal()
+}, { deep: true })
+
+// ── Firestore loader (Real-time) ──────────────────────────────────────────────
+const loadPortfolioData = () => {
+  // 1. Config (intro, about, skills)
+  onSnapshot(doc(db, 'portfolio', 'config'), (snap) => {
+    if (snap.exists()) {
+      const d = snap.data()
       if (d.intro) {
         name.value = d.intro.name || DEF_INTRO.name
         summary.value = d.intro.summary || DEF_INTRO.summary
@@ -69,7 +79,7 @@ const loadPortfolioData = async () => {
         profileImage.value = d.intro.profileImageUrl || '/profile.png'
         resumeUrl.value = d.intro.resumeUrl || DEF_INTRO.resumeUrl
       }
-      if (d.skills?.length) skills.value = d.skills
+      if (d.skills !== undefined) skills.value = d.skills
       if (d.about) {
         aboutContent.value = d.about.content || DEF_ABOUT.content
         contactDetails.value = {
@@ -83,13 +93,29 @@ const loadPortfolioData = async () => {
         }
       }
     }
-    // Experiences
-    if (!expSnap.empty) experience.value = expSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-    // Projects
-    if (!projSnap.empty) projects.value = projSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-  } catch (e) {
-    console.warn('Firestore load failed, using defaults:', e)
-  }
+  }, (e) => console.warn('Config sync failed:', e))
+
+  // 2. Experiences
+  onSnapshot(collection(db, 'experiences'), (snap) => {
+    if (!snap.empty) {
+      experience.value = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+    } else {
+      experience.value = DEF_EXPERIENCE
+    }
+  }, (e) => console.warn('Experience sync failed:', e))
+
+  // 3. Projects
+  onSnapshot(collection(db, 'projects'), (snap) => {
+    if (!snap.empty) {
+      projects.value = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+    } else {
+      projects.value = DEF_PROJECTS
+    }
+  }, (e) => console.warn('Projects sync failed:', e))
 }
 
 // ── Theme ──────────────────────────────────────────────────────────────────────
@@ -143,7 +169,7 @@ onMounted(() => {
   }
 
   // Attach observer immediately so elements fade in instantly with default data
-  const observer = new IntersectionObserver((entries) => {
+  observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) entry.target.classList.add('active')
     })
@@ -151,7 +177,7 @@ onMounted(() => {
   
   // Need slight delay for DOM to be ready before querySelectorAll inside onMounted
   setTimeout(() => {
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+    setupReveal()
   }, 50)
 
   typeEffect()
