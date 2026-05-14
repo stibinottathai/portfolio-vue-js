@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import ContactSection from './ContactSection.vue'
 import { db } from '../firebase'
@@ -39,6 +39,7 @@ const summary = ref(DEF_INTRO.summary)
 const badgeText = ref(DEF_INTRO.badgeText)
 const isAvailable = ref(DEF_INTRO.available)
 const typingTextSource = ref(DEF_INTRO.typingText)
+const profileImage = ref('')
 const aboutContent = ref(DEF_ABOUT.content)
 const skills = ref(DEF_SKILLS)
 const experience = ref(DEF_EXPERIENCE)
@@ -48,8 +49,13 @@ const contactDetails = ref(DEF_CONTACT)
 // ── Firestore loader ───────────────────────────────────────────────────────────
 const loadPortfolioData = async () => {
   try {
+    const [configSnap, expSnap, projSnap] = await Promise.all([
+      getDoc(doc(db, 'portfolio', 'config')),
+      getDocs(query(collection(db, 'experiences'), orderBy('order','asc'))),
+      getDocs(query(collection(db, 'projects'), orderBy('order','asc')))
+    ])
+
     // Config (intro, about, skills)
-    const configSnap = await getDoc(doc(db, 'portfolio', 'config'))
     if (configSnap.exists()) {
       const d = configSnap.data()
       if (d.intro) {
@@ -58,6 +64,7 @@ const loadPortfolioData = async () => {
         badgeText.value = d.intro.badgeText || DEF_INTRO.badgeText
         isAvailable.value = d.intro.available !== undefined ? d.intro.available : true
         typingTextSource.value = d.intro.typingText || DEF_INTRO.typingText
+        profileImage.value = d.intro.profileImageUrl || '/profile.png'
       }
       if (d.skills?.length) skills.value = d.skills
       if (d.about) {
@@ -74,10 +81,8 @@ const loadPortfolioData = async () => {
       }
     }
     // Experiences
-    const expSnap = await getDocs(query(collection(db, 'experiences'), orderBy('order','asc')))
     if (!expSnap.empty) experience.value = expSnap.docs.map(d => ({ id: d.id, ...d.data() }))
     // Projects
-    const projSnap = await getDocs(query(collection(db, 'projects'), orderBy('order','asc')))
     if (!projSnap.empty) projects.value = projSnap.docs.map(d => ({ id: d.id, ...d.data() }))
   } catch (e) {
     console.warn('Firestore load failed, using defaults:', e)
@@ -124,24 +129,33 @@ const typeEffect = () => {
 
 const isMenuOpen = ref(false)
 
-onMounted(async () => {
+watch(typingTextSource, () => {
+  typeEffect()
+})
+
+onMounted(() => {
   if (localStorage.theme === 'light') {
     isDark.value = false
     document.documentElement.classList.add('light')
   }
 
-  // Load Firestore data first, then start typing effect with correct text
-  await loadPortfolioData()
-
+  // Attach observer immediately so elements fade in instantly with default data
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) entry.target.classList.add('active')
     })
   }, { threshold: 0.1 })
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+  
+  // Need slight delay for DOM to be ready before querySelectorAll inside onMounted
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+  }, 50)
 
   typeEffect()
   window.addEventListener('mousemove', handleMouseMove)
+
+  // Load Firestore data asynchronously without blocking the UI rendering
+  loadPortfolioData()
 })
 
 onUnmounted(() => {
@@ -250,7 +264,7 @@ const closeImageModal = () => {
             <div class="hero-mobile-header">
               <div class="hero-mobile-avatar">
                 <div class="profile-ring">
-                  <img src="/profile.png" :alt="name" width="80" height="80" style="width:80px;height:80px;object-fit:cover;">
+                  <img v-if="profileImage" :src="profileImage" :alt="name" width="80" height="80" style="width:80px;height:80px;object-fit:cover;">
                 </div>
               </div>
               <div>
@@ -294,7 +308,7 @@ const closeImageModal = () => {
           <!-- Profile Image (Desktop) -->
           <div class="hero-image reveal reveal-delay-2">
             <div class="profile-card" :style="{ transform: `perspective(1000px) rotateY(${mouseX * 5}deg) rotateX(${mouseY * -5}deg)` }">
-              <img src="/profile.png" alt="Stibin Augustine">
+              <img v-if="profileImage" :src="profileImage" alt="Stibin Augustine">
             </div>
           </div>
         </div>

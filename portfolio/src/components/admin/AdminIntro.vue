@@ -12,7 +12,8 @@ const form = ref({
   typingText: 'Flutter Developer.',
   summary: 'Flutter Developer with 4+ years of experience and strong skills in mobile application design and API integration. Committed to enhancing user experience through performance optimization and effective state management.',
   badgeText: 'Available for new projects',
-  available: true
+  available: true,
+  profileImageUrl: ''
 })
 
 onMounted(async () => {
@@ -69,6 +70,17 @@ const save = async () => {
       <div class="form-group">
         <label>Summary Paragraph</label>
         <textarea v-model="form.summary" rows="4" placeholder="Your professional summary..."></textarea>
+      </div>
+
+      <div class="section-divider">Profile Photo</div>
+      
+      <div class="form-group">
+        <label>Profile Image URL</label>
+        <input v-model="form.profileImageUrl" type="url" placeholder="https://example.com/my-photo.jpg" />
+        <div v-if="form.profileImageUrl" class="image-preview" style="margin-top: 1rem; text-align: center;">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Live Preview:</p>
+          <img :src="form.profileImageUrl" alt="Profile Preview" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid var(--accent-violet); box-shadow: var(--shadow-glow);" @error="form.profileImageUrl = ''" />
+        </div>
       </div>
 
       <div class="form-actions">
