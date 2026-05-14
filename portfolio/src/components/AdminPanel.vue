@@ -29,9 +29,12 @@ const navItems = [
   { id: 'projects',   icon: 'folder_special',       label: 'Projects' },
 ]
 
+const loginError = ref(null)
+
 const login = async () => {
   isLoggingIn.value = true
   accessDenied.value = false
+  loginError.value = null
   try {
     const result = await signInWithPopup(auth, googleProvider)
     if (result.user.email !== ALLOWED_EMAIL) {
@@ -40,6 +43,11 @@ const login = async () => {
     }
   } catch (e) {
     console.error(e)
+    if (e.code === 'auth/unauthorized-domain') {
+      loginError.value = 'Unauthorized domain. Please access the site via http://localhost:5173 exactly, or add 127.0.0.1 to your Firebase Auth Authorized Domains.'
+    } else {
+      loginError.value = 'Login failed: ' + e.message
+    }
   } finally {
     isLoggingIn.value = false
   }
@@ -141,6 +149,11 @@ onUnmounted(() => { if (authUnsub) authUnsub() })
         <div v-if="accessDenied" class="access-denied">
           <span class="material-symbols-outlined">block</span>
           Access denied. Only the authorized account may log in.
+        </div>
+        
+        <div v-if="loginError" class="access-denied" style="background:rgba(239,160,0,0.1); border-color:rgba(239,160,0,0.3); color:#f59e0b;">
+          <span class="material-symbols-outlined">warning</span>
+          {{ loginError }}
         </div>
 
         <button @click="login" class="btn btn-primary btn-lg google-btn" :disabled="isLoggingIn">
