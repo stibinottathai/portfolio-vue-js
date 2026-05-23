@@ -403,10 +403,20 @@ const closeImageModal = () => {
                 <p :class="['project-desc', expandedProjects.includes(index) ? '' : 'line-clamp-3']" style="font-size: 0.875rem;">
                   {{ project.description }}
                 </p>
-                <button @click.stop="toggleExpand(index)" class="read-more-btn">
-                  {{ expandedProjects.includes(index) ? 'Show Less' : 'Read More' }}
-                  <span class="material-symbols-outlined" style="font-size:16px; transition: transform 0.3s;" :style="{ transform: expandedProjects.includes(index) ? 'rotate(180deg)' : '' }">expand_more</span>
-                </button>
+                <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.25rem; flex-wrap: wrap;">
+                  <button @click.stop="toggleExpand(index)" class="read-more-btn" style="margin-top: 0;">
+                    {{ expandedProjects.includes(index) ? 'Show Less' : 'Read More' }}
+                    <span class="material-symbols-outlined" style="font-size:16px; transition: transform 0.3s;" :style="{ transform: expandedProjects.includes(index) ? 'rotate(180deg)' : '' }">expand_more</span>
+                  </button>
+                  <a v-if="project.websiteLink && project.websiteLink !== '#'" :href="project.websiteLink" target="_blank" rel="noopener noreferrer" class="read-more-btn" style="color: var(--accent-cyan); margin-top: 0; text-decoration: none;">
+                    Visit Website
+                    <span class="material-symbols-outlined" style="font-size:16px;">open_in_new</span>
+                  </a>
+                  <a v-if="project.sourceLink && project.sourceLink !== '#'" :href="project.sourceLink" target="_blank" rel="noopener noreferrer" class="read-more-btn" style="color: var(--text-primary); margin-top: 0; text-decoration: none;">
+                    GitHub
+                    <span class="material-symbols-outlined" style="font-size:16px;">code</span>
+                  </a>
+                </div>
               </div>
             </article>
           </div>

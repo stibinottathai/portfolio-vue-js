@@ -17,7 +17,7 @@ const imgPreview = ref('')
 
 const emptyForm = () => ({
   title: '', tags: '', description: '',
-  image: '', detailsLink: '#', sourceLink: '#', order: 0
+  image: '', detailsLink: '#', sourceLink: '#', websiteLink: '', order: 0
 })
 const form = ref(emptyForm())
 
@@ -42,6 +42,7 @@ const openEdit = (p) => {
     title: p.title, tags: Array.isArray(p.tags) ? p.tags.join(', ') : p.tags,
     description: p.description, image: p.image,
     detailsLink: p.detailsLink || '#', sourceLink: p.sourceLink || '#',
+    websiteLink: p.websiteLink || '',
     order: p.order ?? 0
   }
   imgPreview.value = p.image
@@ -68,6 +69,7 @@ const save = async () => {
     image: form.value.image,
     detailsLink: form.value.detailsLink || '#',
     sourceLink: form.value.sourceLink || '#',
+    websiteLink: form.value.websiteLink || '',
     order: Number(form.value.order) || 0
   }
   try {
@@ -166,8 +168,12 @@ const remove = async (id) => {
           <input v-model="form.detailsLink" type="text" placeholder="#" />
         </div>
         <div class="form-group">
-          <label>Source Link</label>
-          <input v-model="form.sourceLink" type="text" placeholder="#" />
+          <label>GitHub Link (Optional)</label>
+          <input v-model="form.sourceLink" type="text" placeholder="https://github.com/..." />
+        </div>
+        <div class="form-group">
+          <label>Website Link (Optional)</label>
+          <input v-model="form.websiteLink" type="text" placeholder="https://" />
         </div>
       </div>
 
