@@ -17,7 +17,7 @@ const imgPreview = ref('')
 
 const emptyForm = () => ({
   title: '', tags: '', description: '',
-  image: '', detailsLink: '#', sourceLink: '#', websiteLink: '', order: 0
+  image: '', image2: '', detailsLink: '#', sourceLink: '#', websiteLink: '', order: 0
 })
 const form = ref(emptyForm())
 
@@ -40,7 +40,7 @@ const openAdd = () => {
 const openEdit = (p) => {
   form.value = {
     title: p.title, tags: Array.isArray(p.tags) ? p.tags.join(', ') : p.tags,
-    description: p.description, image: p.image,
+    description: p.description, image: p.image, image2: p.image2 || '',
     detailsLink: p.detailsLink || '#', sourceLink: p.sourceLink || '#',
     websiteLink: p.websiteLink || '',
     order: p.order ?? 0
@@ -67,6 +67,7 @@ const save = async () => {
     tags: tagsArr,
     description: form.value.description,
     image: form.value.image,
+    image2: form.value.image2 || '',
     detailsLink: form.value.detailsLink || '#',
     sourceLink: form.value.sourceLink || '#',
     websiteLink: form.value.websiteLink || '',
@@ -155,11 +156,16 @@ const remove = async (id) => {
       </div>
 
       <div class="form-group">
-        <label>Image (URL or /filename.png from public folder)</label>
+        <label>Image 1 (URL or /filename.png)</label>
         <input v-model="form.image" type="text" placeholder="/quick_receipt.jpg or https://..." @input="onImageInput" />
         <div v-if="imgPreview" class="img-preview">
           <img :src="imgPreview" alt="Preview" @error="imgPreview = ''" />
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>Image 2 (Optional URL or /filename.png)</label>
+        <input v-model="form.image2" type="text" placeholder="/second_image.jpg or https://..." />
       </div>
 
       <div class="form-row">

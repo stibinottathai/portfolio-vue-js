@@ -387,12 +387,16 @@ const closeImageModal = () => {
           <div class="bento-grid">
             <article v-for="(project, index) in projects" :key="index" class="project-card reveal" :class="'reveal-delay-' + ((index % 3) + 1)">
               <div class="project-image-wrap">
-                <img :src="project.image" :alt="project.title" loading="lazy">
-                <div class="project-image-overlay" @click="openImageModal(project.image)">
-                  <span class="btn btn-ghost" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff; font-size: 0.8125rem;">
-                    <span class="material-symbols-outlined" style="font-size:16px">zoom_in</span>
-                    View Image
-                  </span>
+                <div class="image-carousel-inner" :class="{ 'is-sliding': [project.image, project.image2].filter(Boolean).length > 1 }">
+                  <div v-for="(img, imgIdx) in [project.image, project.image2].filter(Boolean)" :key="imgIdx" class="carousel-slide">
+                    <img :src="img" :alt="project.title" loading="lazy">
+                    <div class="project-image-overlay" @click.stop="openImageModal(img)">
+                      <span class="btn btn-ghost" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff; font-size: 0.8125rem;">
+                        <span class="material-symbols-outlined" style="font-size:16px">zoom_in</span>
+                        View Image
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="project-body">
@@ -695,5 +699,36 @@ const closeImageModal = () => {
 
 .stats-row .glass-card:hover {
   transform: translateY(-4px);
+}
+
+/* Image Carousel */
+.image-carousel-inner {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.image-carousel-inner.is-sliding {
+  width: 200%;
+  animation: slide-toggle 8s infinite ease-in-out;
+}
+.project-image-wrap:hover .image-carousel-inner.is-sliding {
+  animation-play-state: paused;
+}
+.carousel-slide {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  position: relative;
+}
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@keyframes slide-toggle {
+  0%, 40% { transform: translateX(0); }
+  50%, 90% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
 }
 </style>
