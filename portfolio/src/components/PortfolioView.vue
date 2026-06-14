@@ -39,12 +39,12 @@ const name = ref(DEF_INTRO.name)
 const summary = ref(DEF_INTRO.summary)
 const badgeText = ref(DEF_INTRO.badgeText)
 const isAvailable = ref(DEF_INTRO.available)
-const typingTextSource = ref(DEF_INTRO.typingText)
+const typingTextSource = ref('') // Start empty to prevent flashing default title before Firestore loads
 const profileImage = ref('')
 const aboutContent = ref(DEF_ABOUT.content)
-const skills = ref(DEF_SKILLS)
-const experience = ref(DEF_EXPERIENCE)
-const projects = ref(DEF_PROJECTS)
+const skills = ref([]) // Start empty to prevent flashing default skills
+const experience = ref([]) // Start empty to prevent flashing default experience
+const projects = ref([]) // Start empty to prevent flashing default projects
 const contactDetails = ref(DEF_CONTACT)
 const resumeUrl = ref(DEF_INTRO.resumeUrl)
 
@@ -79,7 +79,11 @@ const loadPortfolioData = () => {
         profileImage.value = d.intro.profileImageUrl || '/profile.png'
         resumeUrl.value = d.intro.resumeUrl || DEF_INTRO.resumeUrl
       }
-      if (d.skills !== undefined) skills.value = d.skills
+      if (d.skills !== undefined) {
+        skills.value = d.skills
+      } else {
+        skills.value = DEF_SKILLS
+      }
       if (d.about) {
         aboutContent.value = d.about.content || DEF_ABOUT.content
         contactDetails.value = {
@@ -92,8 +96,13 @@ const loadPortfolioData = () => {
           ]
         }
       }
+    } else {
+      skills.value = DEF_SKILLS
     }
-  }, (e) => console.warn('Config sync failed:', e))
+  }, (e) => {
+    console.warn('Config sync failed:', e)
+    skills.value = DEF_SKILLS
+  })
 
   // 2. Experiences
   onSnapshot(collection(db, 'experiences'), (snap) => {
@@ -104,7 +113,10 @@ const loadPortfolioData = () => {
     } else {
       experience.value = DEF_EXPERIENCE
     }
-  }, (e) => console.warn('Experience sync failed:', e))
+  }, (e) => {
+    console.warn('Experience sync failed:', e)
+    experience.value = DEF_EXPERIENCE
+  })
 
   // 3. Projects
   onSnapshot(collection(db, 'projects'), (snap) => {
@@ -115,7 +127,10 @@ const loadPortfolioData = () => {
     } else {
       projects.value = DEF_PROJECTS
     }
-  }, (e) => console.warn('Projects sync failed:', e))
+  }, (e) => {
+    console.warn('Projects sync failed:', e)
+    projects.value = DEF_PROJECTS
+  })
 }
 
 // ── Theme ──────────────────────────────────────────────────────────────────────
@@ -138,19 +153,31 @@ const handleMouseMove = (event) => {
 const typingText = ref('')
 const isTyping = ref(true)
 let charIndex = 0
+let typingTimeout = null
 
 const typeEffect = () => {
+  if (typingTimeout) {
+    clearTimeout(typingTimeout)
+  }
   charIndex = 0
-  isTyping.value = true
   typingText.value = ''
+
+  const src = typingTextSource.value
+  if (!src) {
+    isTyping.value = false
+    return
+  }
+
+  isTyping.value = true
   const tick = () => {
-    const src = typingTextSource.value
-    if (charIndex <= src.length) {
-      typingText.value = src.substring(0, charIndex)
+    const currentSrc = typingTextSource.value
+    if (charIndex <= currentSrc.length) {
+      typingText.value = currentSrc.substring(0, currentSrc.length >= charIndex ? charIndex : currentSrc.length)
       charIndex++
-      setTimeout(tick, 80)
+      typingTimeout = setTimeout(tick, 80)
     } else {
       isTyping.value = false
+      typingTimeout = null
     }
   }
   tick()
@@ -185,10 +212,29 @@ onMounted(() => {
 
   // Load Firestore data asynchronously without blocking the UI rendering
   loadPortfolioData()
+
+  // Fallback in case Firestore takes too long or fails to load
+  setTimeout(() => {
+    if (!typingTextSource.value) {
+      typingTextSource.value = DEF_INTRO.typingText
+    }
+    if (skills.value.length === 0) {
+      skills.value = DEF_SKILLS
+    }
+    if (experience.value.length === 0) {
+      experience.value = DEF_EXPERIENCE
+    }
+    if (projects.value.length === 0) {
+      projects.value = DEF_PROJECTS
+    }
+  }, 4000)
 })
 
 onUnmounted(() => {
   window.removeEventListener('mousemove', handleMouseMove)
+  if (typingTimeout) {
+    clearTimeout(typingTimeout)
+  }
 })
 
 const scrollToSection = (id) => {
