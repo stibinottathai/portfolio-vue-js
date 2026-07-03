@@ -67,66 +67,82 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <section id="contact" class="section contact-section">
-    <!-- Background decoration -->
-    <div class="contact-bg-orb"></div>
+  <section id="contact" class="py-section-gap relative overflow-hidden bg-surface-container-low/30 dark:bg-surface-container-low/5 transition-colors duration-300">
+    <!-- Background Orb -->
+    <div class="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] bg-gradient-to-tr from-secondary/5 to-transparent rounded-full pointer-events-none"></div>
 
-    <div class="container">
-      <div class="section-header reveal">
-        <h2>Get In Touch</h2>
-        <div class="accent-line"></div>
-        <p class="section-subtitle">Have a project in mind or want to collaborate? I'd love to hear from you.</p>
+    <div class="max-w-container-max mx-auto px-gutter">
+      <div class="text-center mb-16 space-y-4">
+        <h2 class="font-headline-lg text-primary dark:text-primary-fixed">Get In Touch</h2>
+        <div class="w-24 h-1 bg-secondary dark:bg-secondary-fixed mx-auto rounded-full"></div>
+        <p class="text-on-surface-variant dark:text-on-surface-variant/80 max-w-xl mx-auto">
+          Have a project in mind or want to collaborate? I'd love to hear from you.
+        </p>
       </div>
 
-      <div class="contact-grid reveal reveal-delay-1">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
         <!-- Info Side -->
-        <div class="contact-info">
-          <div class="contact-info-card glass-card">
-            <div class="contact-info-item">
-              <div class="contact-icon-wrap">
-                <span class="material-symbols-outlined">mail</span>
+        <div class="lg:col-span-5 flex">
+          <div class="w-full bg-white dark:bg-surface-container p-8 md:p-10 rounded-[2rem] shadow-lg border border-surface-container dark:border-outline/20 flex flex-col justify-between gap-10">
+            <div class="space-y-8">
+              <!-- Email -->
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-secondary-container dark:bg-secondary/20 flex items-center justify-center text-on-secondary-container dark:text-on-secondary shrink-0">
+                  <span class="material-symbols-outlined text-2xl">mail</span>
+                </div>
+                <div>
+                  <div class="font-bold text-xs uppercase tracking-wider text-on-surface-variant/65 mb-1">Email</div>
+                  <a :href="'mailto:' + contactDetails.email" class="text-base font-semibold text-primary dark:text-primary-fixed hover:underline break-all">
+                    {{ contactDetails.email }}
+                  </a>
+                </div>
               </div>
-              <div>
-                <div class="contact-info-label">Email</div>
-                <a :href="'mailto:' + contactDetails.email" class="contact-info-value">
-                  {{ contactDetails.email }}
-                </a>
+
+              <!-- Phone -->
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center text-white dark:text-on-primary-container shrink-0">
+                  <span class="material-symbols-outlined text-2xl">call</span>
+                </div>
+                <div>
+                  <div class="font-bold text-xs uppercase tracking-wider text-on-surface-variant/65 mb-1">Phone</div>
+                  <a :href="'tel:' + contactDetails.phone.replace(/\s+/g, '')" class="text-base font-semibold text-primary dark:text-primary-fixed hover:underline">
+                    {{ contactDetails.phone }}
+                  </a>
+                </div>
+              </div>
+
+              <!-- Location -->
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-error-container dark:bg-error/20 flex items-center justify-center text-on-error-container dark:text-on-error shrink-0">
+                  <span class="material-symbols-outlined text-2xl">location_on</span>
+                </div>
+                <div>
+                  <div class="font-bold text-xs uppercase tracking-wider text-on-surface-variant/65 mb-1">Location</div>
+                  <span class="text-base font-semibold text-primary dark:text-primary-fixed">
+                    {{ contactDetails.location }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Response Time -->
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-surface-container-high dark:bg-surface-container-highest flex items-center justify-center text-primary dark:text-primary-fixed shrink-0">
+                  <span class="material-symbols-outlined text-2xl">schedule</span>
+                </div>
+                <div>
+                  <div class="font-bold text-xs uppercase tracking-wider text-on-surface-variant/65 mb-1">Response Time</div>
+                  <span class="text-base font-semibold text-primary dark:text-primary-fixed">
+                    Within 24 hours
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div class="contact-info-item">
-              <div class="contact-icon-wrap">
-                <span class="material-symbols-outlined">call</span>
-              </div>
-              <div>
-                <div class="contact-info-label">Phone</div>
-                <a :href="'tel:' + contactDetails.phone.replace(/\\s+/g, '')" class="contact-info-value">{{ contactDetails.phone }}</a>
-              </div>
-            </div>
-
-            <div class="contact-info-item">
-              <div class="contact-icon-wrap">
-                <span class="material-symbols-outlined">location_on</span>
-              </div>
-              <div>
-                <div class="contact-info-label">Location</div>
-                <span class="contact-info-value">{{ contactDetails.location }}</span>
-              </div>
-            </div>
-
-            <div class="contact-info-item">
-              <div class="contact-icon-wrap">
-                <span class="material-symbols-outlined">schedule</span>
-              </div>
-              <div>
-                <div class="contact-info-label">Response Time</div>
-                <span class="contact-info-value">Within 24 hours</span>
-              </div>
-            </div>
-
-            <div class="contact-socials">
-              <a v-for="link in contactDetails.social" :key="link.name" :href="link.link" target="_blank" class="contact-social-btn">
-                <span class="material-symbols-outlined">{{ link.icon }}</span>
+            <!-- Social Links -->
+            <div class="flex flex-wrap gap-3 pt-6 border-t border-outline-variant/30">
+              <a v-for="link in contactDetails.social" :key="link.name" :href="link.link" target="_blank" 
+                 class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-on-surface-variant dark:text-on-surface-variant/80 bg-background dark:bg-background/30 border border-outline-variant/30 dark:border-outline/20 hover:border-secondary hover:text-secondary dark:hover:text-secondary-fixed transition-all">
+                <span class="material-symbols-outlined text-sm">{{ link.icon }}</span>
                 {{ link.name }}
               </a>
             </div>
@@ -134,17 +150,18 @@ const handleSubmit = async () => {
         </div>
 
         <!-- Form Side -->
-        <div class="contact-form-wrap">
-          <form class="contact-form glass-card" @submit.prevent="handleSubmit" novalidate>
-            <div class="form-header">
-              <h3>Send a Message</h3>
-              <p>Fill out the form and I'll respond as soon as possible.</p>
+        <div class="lg:col-span-7">
+          <form class="bg-white dark:bg-surface-container p-8 md:p-10 rounded-[2rem] shadow-lg border border-surface-container dark:border-outline/20 space-y-6" @submit.prevent="handleSubmit" novalidate>
+            <div class="mb-4">
+              <h3 class="font-headline-md text-primary dark:text-primary-fixed mb-1">Send a Message</h3>
+              <p class="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Fill out the form and I'll respond as soon as possible.</p>
             </div>
 
-            <div class="form-group">
-              <label for="contact-name">Full Name</label>
-              <div class="input-wrap">
-                <span class="input-icon material-symbols-outlined">person</span>
+            <!-- Name Input -->
+            <div class="flex flex-col gap-2">
+              <label for="contact-name" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/75">Full Name</label>
+              <div class="relative flex items-center bg-background dark:bg-background/20 border border-outline-variant/50 dark:border-outline/20 rounded-xl overflow-hidden focus-within:border-secondary transition-all">
+                <span class="absolute left-4 material-symbols-outlined text-on-surface-variant/50">person</span>
                 <input
                   id="contact-name"
                   v-model="name"
@@ -152,14 +169,16 @@ const handleSubmit = async () => {
                   placeholder="Your full name"
                   autocomplete="name"
                   :disabled="isLoading"
+                  class="w-full pl-12 pr-4 py-3 bg-transparent text-on-background dark:text-on-surface focus:outline-none text-base"
                 />
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="contact-email">Email Address</label>
-              <div class="input-wrap">
-                <span class="input-icon material-symbols-outlined">mail</span>
+            <!-- Email Input -->
+            <div class="flex flex-col gap-2">
+              <label for="contact-email" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/75">Email Address</label>
+              <div class="relative flex items-center bg-background dark:bg-background/20 border border-outline-variant/50 dark:border-outline/20 rounded-xl overflow-hidden focus-within:border-secondary transition-all">
+                <span class="absolute left-4 material-symbols-outlined text-on-surface-variant/50">mail</span>
                 <input
                   id="contact-email"
                   v-model="email"
@@ -167,27 +186,31 @@ const handleSubmit = async () => {
                   placeholder="your@email.com"
                   autocomplete="email"
                   :disabled="isLoading"
+                  class="w-full pl-12 pr-4 py-3 bg-transparent text-on-background dark:text-on-surface focus:outline-none text-base"
                 />
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="contact-message">Message</label>
-              <div class="input-wrap textarea-wrap">
-                <span class="input-icon material-symbols-outlined" style="align-self: flex-start; margin-top: 0.9rem;">chat</span>
+            <!-- Message Input -->
+            <div class="flex flex-col gap-2">
+              <label for="contact-message" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant/75">Message</label>
+              <div class="relative flex items-start bg-background dark:bg-background/20 border border-outline-variant/50 dark:border-outline/20 rounded-xl overflow-hidden focus-within:border-secondary transition-all">
+                <span class="absolute left-4 top-4.5 material-symbols-outlined text-on-surface-variant/50">chat</span>
                 <textarea
                   id="contact-message"
                   v-model="message"
                   placeholder="Tell me about your project or just say hi..."
-                  rows="5"
+                  rows="4"
                   :disabled="isLoading"
+                  class="w-full pl-12 pr-4 py-3 bg-transparent text-on-background dark:text-on-surface focus:outline-none text-base resize-none"
                 ></textarea>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg submit-btn" :disabled="isLoading">
-              <span v-if="isLoading" class="spinner"></span>
-              <span v-else class="material-symbols-outlined" style="font-size:18px">send</span>
+            <!-- Submit Button -->
+            <button type="submit" class="w-full py-4 bg-primary text-white hover:bg-secondary dark:bg-primary-container dark:text-on-primary-container dark:hover:bg-primary transition-all rounded-xl font-bold flex items-center justify-center gap-2 cursor-pointer" :disabled="isLoading">
+              <span v-if="isLoading" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <span v-else class="material-symbols-outlined text-lg">send</span>
               {{ isLoading ? 'Sending…' : 'Send Message' }}
             </button>
           </form>
@@ -195,9 +218,12 @@ const handleSubmit = async () => {
       </div>
     </div>
 
-    <!-- Toast -->
+    <!-- Toast Notification -->
     <Transition name="toast">
-      <div v-if="toast" :class="['toast', 'toast--' + toast.type]">
+      <div v-if="toast" :class="[
+        'fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-6 py-4 rounded-2xl shadow-xl font-bold text-sm backdrop-blur-md transition-all',
+        toast.type === 'success' ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400' : 'bg-rose-500/15 border border-rose-500/40 text-rose-600 dark:text-rose-400'
+      ]">
         <span class="material-symbols-outlined">{{ toast.type === 'success' ? 'check_circle' : 'error' }}</span>
         {{ toast.msg }}
       </div>
@@ -206,274 +232,6 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.contact-section {
-  position: relative;
-  overflow: hidden;
-}
-
-.contact-bg-orb {
-  position: absolute;
-  bottom: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-/* Grid */
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-top: 0.5rem;
-}
-
-@media (min-width: 1024px) {
-  .contact-grid {
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 2.5rem;
-  }
-}
-
-/* Info Card */
-.contact-info-card {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  height: 100%;
-}
-
-.contact-info-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.contact-icon-wrap {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(34, 211, 238, 0.1));
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.contact-icon-wrap .material-symbols-outlined {
-  font-size: 18px;
-  color: var(--accent-violet);
-}
-
-.contact-info-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: 0.2rem;
-}
-
-.contact-info-value {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-a.contact-info-value:hover {
-  color: var(--accent-violet);
-}
-
-.contact-socials {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.contact-social-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.contact-social-btn:hover {
-  color: var(--accent-violet);
-  border-color: var(--accent-violet);
-  background: rgba(139, 92, 246, 0.08);
-}
-
-.contact-social-btn .material-symbols-outlined {
-  font-size: 16px;
-}
-
-/* Form */
-.contact-form {
-  padding: 2rem;
-}
-
-.form-header {
-  margin-bottom: 1.75rem;
-}
-
-.form-header h3 {
-  font-size: 1.25rem;
-  color: var(--text-primary);
-  margin-bottom: 0.35rem;
-}
-
-.form-header p {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.form-group label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.input-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.input-wrap:focus-within {
-  border-color: var(--accent-violet);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
-}
-
-.textarea-wrap {
-  align-items: flex-start;
-}
-
-.input-icon {
-  font-size: 18px;
-  color: var(--text-muted);
-  padding: 0 0.75rem;
-  flex-shrink: 0;
-}
-
-.input-wrap input,
-.input-wrap textarea {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  padding: 0.75rem 0.75rem 0.75rem 0;
-  resize: none;
-  line-height: 1.6;
-}
-
-.input-wrap input::placeholder,
-.input-wrap textarea::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-.input-wrap input:disabled,
-.input-wrap textarea:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.submit-btn {
-  width: 100%;
-  justify-content: center;
-  margin-top: 0.5rem;
-  gap: 0.5rem;
-}
-
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-/* Spinner */
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.875rem 1.5rem;
-  border-radius: 12px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  white-space: nowrap;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  backdrop-filter: blur(16px);
-}
-
-.toast--success {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #10b981;
-}
-
-.toast--error {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #ef4444;
-}
-
-.toast .material-symbols-outlined {
-  font-size: 20px;
-}
-
 /* Toast transitions */
 .toast-enter-active,
 .toast-leave-active {
@@ -482,6 +240,6 @@ a.contact-info-value:hover {
 .toast-enter-from,
 .toast-leave-to {
   opacity: 0;
-  transform: translateX(-50%) translateY(16px);
+  transform: translate(-50%, 16px);
 }
 </style>

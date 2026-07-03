@@ -71,11 +71,12 @@
 }
 
 /* ---------- Reset & Base ---------- */
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+.admin-root {
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
 html {
   scroll-behavior: smooth;
@@ -235,11 +236,13 @@ p { color: var(--text-secondary); }
   animation: btn-shimmer 3s infinite;
 }
 
+} /* close .admin-root */
 @keyframes btn-shimmer {
   0% { left: -100%; }
   25% { left: 200%; }
   100% { left: 200%; }
 }
+.admin-root { /* reopen .admin-root */
 
 .btn-animated:hover {
   border-color: var(--accent-cyan);
@@ -406,10 +409,12 @@ p { color: var(--text-secondary); }
   background: #34d399;
 }
 
+} /* close .admin-root */
 @keyframes pulse-ring {
   0% { transform: scale(1); opacity: 0.8; }
   100% { transform: scale(2.5); opacity: 0; }
 }
+.admin-root { /* reopen .admin-root */
 
 /* ---------- Typing Cursor ---------- */
 .typing-cursor {
@@ -422,10 +427,12 @@ p { color: var(--text-secondary); }
   vertical-align: text-bottom;
 }
 
+} /* close .admin-root */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+.admin-root { /* reopen .admin-root */
 
 /* ---------- Profile Ring ---------- */
 .profile-ring {
@@ -479,10 +486,12 @@ p { color: var(--text-secondary); }
   animation: line-flow 3s linear infinite;
 }
 
+} /* close .admin-root */
 @keyframes line-flow {
   0% { background-position: 0% -100%; }
   100% { background-position: 0% 100%; }
 }
+.admin-root { /* reopen .admin-root */
 
 .timeline-node {
   position: absolute;
@@ -899,6 +908,7 @@ p { color: var(--text-secondary); }
 
 .modal-close:hover { color: var(--accent-violet); }
 
+} /* close .admin-root */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -908,6 +918,7 @@ p { color: var(--text-secondary); }
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+.admin-root { /* reopen .admin-root */
 
 /* ---------- Bento Grid ---------- */
 .bento-grid {
@@ -1125,4 +1136,5 @@ html.light .timeline-node {
 
 html.light .grain-overlay {
   opacity: 0;
+}
 }
