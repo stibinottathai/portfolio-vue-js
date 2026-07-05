@@ -71,6 +71,16 @@ watch([skills, experience, projects], () => {
   setupReveal()
 }, { deep: true })
 
+watch(showAllProjects, (val) => {
+  if (val) {
+    nextTick(() => {
+      document.querySelectorAll('#works .grid > .reveal:not(.active)').forEach((el) => {
+        el.classList.add('active')
+      })
+    })
+  }
+})
+
 // ── Firestore loader (Real-time) ──────────────────────────────────────────────
 const loadPortfolioData = () => {
   // 1. Config (intro, about, skills)
