@@ -5,69 +5,111 @@
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
-  /* Colors — Dark palette */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #111118;
-  --bg-card: #16161e;
-  --bg-card-hover: #1c1c26;
-  --bg-elevated: #1e1e28;
+  /* Colors — Linear Dark canvas by default */
+  --canvas: #010102;
+  --canvas-soft: #0f1011;
+  --canvas-card: #0f1011;
+  --canvas-mid: #141516;
+  --hairline: #23252a;
+  
+  --primary: #5e6ad2;
+  --on-primary: #ffffff;
+  --ink: #f7f8f8;
+  --ink-hover: #ffffff;
+  --body: #d0d6e0;
+  --mute: #8a8f98;
 
-  --text-primary: #f0f0f5;
-  --text-secondary: #a0a0b8;
-  --text-muted: #6b6b80;
+  /* Accent Colors */
+  --accent-sunset: #ff7a17;
+  --accent-sunset-soft: #ffc285;
+  --accent-dusk: #7c3aed;
+  --accent-twilight: #c4b5fd;
+  --accent-breeze: #a0c3ec;
 
-  --accent-violet: #8b5cf6;
-  --accent-cyan: #06b6d4;
-  --accent-blue: #3b82f6;
-  --accent-gradient: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
-  --accent-gradient-hover: linear-gradient(135deg, #9d74f7, #22d3ee);
+  /* Font Families */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-card: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(139, 92, 246, 0.3);
+  /* legacy tokens mapping for AdminPanel and general compatibility */
+  --bg-primary: var(--canvas);
+  --bg-secondary: var(--canvas-soft);
+  --bg-card: var(--canvas-card);
+  --bg-card-hover: var(--canvas-soft);
+  --bg-elevated: var(--canvas-mid);
+  --text-primary: var(--ink);
+  --text-secondary: var(--body);
+  --text-muted: var(--mute);
+  --accent-violet: var(--primary);
+  --accent-cyan: var(--accent-breeze);
+  --accent-blue: var(--accent-breeze);
+  --border-subtle: var(--hairline);
+  --border-card: var(--hairline);
+  --border-glow: rgba(94, 106, 210, 0.2);
 
-  --glass-bg: rgba(22, 22, 30, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-blur: 20px;
-
-  /* Typography */
-  --font-heading: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --glass-bg: rgba(1, 1, 2, 0.7);
+  --glass-border: var(--hairline);
+  --glass-blur: 16px;
 
   /* Spacing scale */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
 
-  /* Border radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
+  /* Border radius (Linear rounded md=8px, lg=12px) */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
-  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 100ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.15);
-  --shadow-glow-cyan: 0 0 40px rgba(6, 182, 212, 0.1);
+  /* Shadows - Banned on cards, thin edge border only */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-glow: none;
+  --shadow-glow-cyan: none;
+}
+
+/* Light mode overrides */
+html:not(.dark) {
+  --canvas: #fafafa;
+  --canvas-soft: #ffffff;
+  --canvas-card: #ffffff;
+  --canvas-mid: #f4f4f5;
+  --hairline: #e4e4e7;
+  
+  --primary: #5e6ad2;
+  --on-primary: #ffffff;
+  --ink: #0f1011;
+  --ink-hover: #000000;
+  --body: #3f3f46;
+  --mute: #71717a;
+
+  --accent-sunset: #ea580c;
+  --accent-sunset-soft: #ffedd5;
+  --accent-dusk: #6d28d9;
+  --accent-twilight: #ddd6fe;
+  --accent-breeze: #2563eb;
+
+  --glass-bg: rgba(250, 250, 250, 0.85);
+  --border-glow: rgba(94, 106, 210, 0.15);
 }
 
 /* ---------- Reset & Base ---------- */
